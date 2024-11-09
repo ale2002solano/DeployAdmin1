@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import 'swiper/css/navigation';
+
+
+input:focus-visible {
+  outline: none !important;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.imagen{
+  /* background-image: url('/img/Background1.png'); */
+  background-size: cover;
+  background-color: #e4caff28
+}
+
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.imagenfondo{
+  border: 2px solid red;
+}
+
+.textoDescripcion{
+  font-family:'Crimson Text' ;
+  src: url('/src/public/fonts/CrimsonText-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+.textoRegistro{
+  font-family: var(--koulen);
+    line-height: 116%;
+}
+.textoPrecioCantidad{
+  font-family: 'Roboto';
+  src: url('/src/public/fonts/Roboto-Light.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.textoPrecioCantidaduwu{
+  font-family: 'RobotoMono';
+  src: url('/src/public/fonts/RobotoMono-Italic-VariableFont_wght.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.sombra{
+  background: linear-gradient(
+    to bottom, 
+    #14255b00 0%,       
+    #17181b7e 76%,     
+    #17181B 100% 
+  );
+
+  
+}
+
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
