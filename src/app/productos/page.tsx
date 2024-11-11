@@ -11,16 +11,22 @@ export default function productos () {
         <div className="flex h-screen w-full flex-col bg-slate-50 overflow-hidden ">
             <div><Navbar/></div>
             
-            <div className='flex pt-[5%] h-[80%] '>
-                <div  className="w-[15%] h-full bg-[#ffffff] shadow-2xl " ></div>
+            <div className='flex pt-[5%] h-[85%] '>
+                <div  className="w-[15%] h-full bg-[#ffffff] shadow-xl" ></div>
                 
                 <div className=" z-2 w-full h-full bg-[#COCOCO]">
                     <div className="h-[8%]">
                         <Titulo/></div>
                     <div className="h-[14%]">
                         <Interactions/></div>
-                    <div className="bg-purple-400 h-[78%]">
-                        <Products/></div>
+                    <div className="h-[78%] flex flex-wrap overflow-y-auto  pl-4">
+                        <Products/>
+                        <Products/>
+                        <Products/>
+                        <Products/>
+                        <Products/>
+                        <Products/>
+                    </div>
                 </div>
             </div>
             

@@ -1,25 +1,53 @@
 'use client'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { useState, useEffect, useRef } from 'react';
+
 export default function Categorias () {
+    const [isOpen, setIsOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+            setIsOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <h1 className="text-black"></h1>
-        // <div className="size-7 text-black w-full">
-        //     <div className="z-30 select-none absolute flex whitespace-nowrap flex-col rounded-lg bg-slate-50 p-2 shadow-2xl shadow-slate-900 drop-shadow-lg">
-        //         <div key="" className="mb-[2px] flex items-center">
-        //             <input
-        //                 id=""
-        //                 type="checkbox"
-        //                 value=""
-        //                 className="select-none h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-transparent"
-                        
-        //             />
-        //             <label
-        //                 className="select-none ms-2 mt-[2px] font-lekton text-base font-medium text-[#444343]"
-        //             >
-                        
-        //             </label>
-        //         </div>
-        //     </div>
-        // </div>
+        <div ref={menuRef} className="relative">
+            <div onClick={() => setIsOpen(!isOpen)} className="hover:text-gray-800 cursor-pointer z-2 font-lekton font-semibold text-gray-700 flex justify-center items-center mt-3">
+            <div>
+                Categorías
+            </div>
+            <div>
+                <FontAwesomeIcon icon={ faChevronDown } className='text-sm'/>
+            </div>
+
+            {isOpen && (
+                <div className="mt-[48%] ml-[5%] w-48 bg-white rounded-md shadow-lg z-10 font-lekton text-base">
+                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-200 ">
+                    Productos
+                </a>
+                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">
+                    Materiales
+                </a>
+                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">
+                    Kits
+                </a>
+                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">
+                    Tutoriales
+                </a>
+                </div>
+            )}
+            </div>
+        </div>
     )
 }
