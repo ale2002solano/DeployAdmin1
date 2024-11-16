@@ -1,3 +1,5 @@
+import { Category } from "@interfaces/product";
+
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData();
@@ -40,5 +42,20 @@ export const updateProfilePic = async (correo: string, imageUrl: string) => {
   } catch (error) {
     console.error('Error updating profile picture:', error);
     throw new Error('Error updating profile picture');
+  }
+};
+
+// Función para obtener las categorías
+export const fetchCategories = async (): Promise<Category[]> => {
+  try {
+      const response = await fetch('https://deploybackenddiancrochet.onrender.com/producto/categorias');
+      if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+      }
+      const data = await response.json();
+      return data.categorias as Category[];
+  } catch (error) {
+      console.error('Error fetching categories:', error);
+      return [];
   }
 };
