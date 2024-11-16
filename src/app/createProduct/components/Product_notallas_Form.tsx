@@ -333,7 +333,7 @@ const ProductForm: React.FC = () => {
               type="text"
               value={keywordInput}
               onChange={(e) => setkeywordInput(e.target.value)}
-              
+              required
               onKeyDown={handleKeywordAdd}
               className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
               placeholder="Escribe y presiona Enter o Espacio para agregar"
