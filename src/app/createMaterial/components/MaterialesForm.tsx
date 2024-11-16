@@ -3,6 +3,8 @@ import UploadModal from "../../createProduct/components/subirFotos";
 import { fetchCategoriesMaterials } from "@services/materials";
 import Image from 'next/image';
 import { categoriasMateriales } from "@interfaces/materials";
+import { MaterialWithTalla, MaterialWithoutTalla } from "@interfaces/materials";
+import { createMaterialWithTalla, createMaterialWithoutTalla } from "@services/materials";
 
 const MaterialForm: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -21,6 +23,17 @@ const MaterialForm: React.FC = () => {
   const [keywordInput, setkeywordInput] = useState("");
   const [keywords, setkeywords] = useState<string[]>([]);
 
+  const sizeMapping: { [key: string]: keyof typeof sizePrices } = {
+    LACE: "Lace",
+    SUPERFINE: "Super fine",
+    FINE: "Fine",
+    LIGHT: "Light",
+    MEDIUM: "Medium",
+    BULKY: "Bulky",
+    SUPERBULKY: "Super bulky",
+    JUMBO: "Jumbo",
+  };
+  
   const [categories, setCategories] = useState<categoriasMateriales[]>([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
@@ -40,24 +53,24 @@ const MaterialForm: React.FC = () => {
 
   // Size-specific states for "Producto con talla"
   const [sizePrices, setSizePrices] = useState({
-    LACE: "",
-    SUPERFINE: "",
-    FINE: "",
-    LIGHT: "",
-    MEDIUM: "",
-    BULKY:"",
-    SUPERBULKY:"",
-    JUMBO:""
+    Lace: "",
+    "Super fine": "",
+    Fine: "",
+    Light: "",
+    Medium: "",
+    Bulky:"",
+    "Super bulky":"",
+    Jumbo:""
   });
   const [sizeQuantities, setSizeQuantities] = useState({
-    LACE: "",
-    SUPERFINE: "",
-    FINE: "",
-    LIGHT: "",
-    MEDIUM: "",
-    BULKY:"",
-    SUPERBULKY:"",
-    JUMBO:""
+    Lace: "",
+    "Super fine": "",
+    Fine: "",
+    Light: "",
+    Medium: "",
+    Bulky:"",
+    "Super bulky":"",
+    Jumbo:""
   });
 	
   const handleRemoveGalleryImage = (url: string) => {
@@ -95,41 +108,61 @@ const MaterialForm: React.FC = () => {
     setkeywords((prevKeywords) => prevKeywords.filter((cat) => cat !== keyword));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submit triggered");
+  
+    if (!isCreatingProduct) return;
+  
+    const newMaterial: MaterialWithTalla | MaterialWithoutTalla = productType === "Producto con talla"
+      ? {
+          productName,
+          description,
+          sizePrices: {
+            ...Object.fromEntries(
+              Object.entries(sizePrices).map(([size, price]) => [size, price === "0" || price.trim() === "" ? null : parseFloat(price)])
+            ),
+          },
+          sizeQuantities: {
+            ...Object.fromEntries(
+              Object.entries(sizeQuantities).map(([size, quantity]) => [size, quantity === "0" || quantity.trim() === "" ? null : parseInt(quantity, 10)])
+            ),
+          },
+          mainImage,
+          galleryImages: galleryImages.length > 0 ? galleryImages : null,
+          keywords,
+          categoryId: 4,
+          marca,
+        }
+      : {
+          productName,
+          description,
+          price: price === "0" || price.trim() === "" ? null : parseFloat(price),
+          stock: stock === "0" || stock.trim() === "" ? null : parseInt(stock, 10),
+          mainImage,
+          galleryImages: galleryImages.length > 0 ? galleryImages : null,
+          keywords,
+          categoryId: selectedCategoryId,
+          marca,
+        };
 
-    if (!isCreatingProduct) {
-      console.log("isCreatingProduct flag is false, skipping submission");
-      return;
+        console.log("Objeto enviado:", newMaterial);
+
+    try {
+      if (productType === "Producto con talla") {
+        const response = await createMaterialWithTalla(newMaterial as MaterialWithTalla);
+        console.log("Material con talla creado exitosamente:", response);
+      } else {
+        const response = await createMaterialWithoutTalla(newMaterial as MaterialWithoutTalla);
+        console.log("Material sin talla creado exitosamente:", response);
+      }
+  
+      resetForm();
+    } catch (error) {
+      console.error("Error al crear el material:", error);
+    } finally {
+      setIsCreatingProduct(false);
+      resetForm();
     }
-
-    const newProduct = productType === "Producto con talla" ? {
-      productName,
-      description,
-      sizePrices,
-      sizeQuantities,
-      mainImage,
-      galleryImages,
-      keywords,
-      marca,
-      categoryId:4
-    } : {
-      productName,
-      description,
-      price: parseFloat(price),
-      stock: parseInt(stock, 10),
-      mainImage,
-      galleryImages,
-      keywords,
-      categoryId: selectedCategoryId
-    };
-
-    console.log("New Product:", newProduct);
-
-    // Resetting the state after product creation
-    setIsCreatingProduct(false); // Reset the flag
-    resetForm();
   };
 
   const handleCreateProduct = () => {
@@ -147,8 +180,8 @@ const MaterialForm: React.FC = () => {
     setMainImage(null);
     setGalleryImages([]);
     setkeywords([]);
-    setSizePrices({ LACE: "", SUPERFINE: "", FINE: "", LIGHT: "", MEDIUM: "" ,BULKY:"", SUPERBULKY: "",JUMBO:""});
-    setSizeQuantities({ LACE: "", SUPERFINE: "", FINE: "", LIGHT: "", MEDIUM: "" ,BULKY:"", SUPERBULKY: "",JUMBO:"" });
+    setSizePrices({ Lace: "", "Super fine": "", Fine: "", Light: "", Medium: "" ,Bulky:"", "Super bulky": "",Jumbo:""});
+    setSizeQuantities({ Lace: "", "Super fine": "", Fine: "", Light: "", Medium: "" ,Bulky:"", "Super bulky": "",Jumbo:""});
   };
 
 
@@ -237,35 +270,39 @@ const MaterialForm: React.FC = () => {
               </div>
               </div>
               ) : (
-                          <div className="mt-4 space-y-4">
-                            {["LACE", "SUPERFINE", "FINE", "LIGHT", "MEDIUM","BULKY","SUPERBULKY","JUMBO"].map((size) => (
-                              <div key={size} className="grid grid-cols-2 gap-4">
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-700">Precio {size}</label>
-                                  <input
-                                    type="number"
-                                    value={sizePrices[size as keyof typeof sizePrices]}
-                                    onChange={(e) => setSizePrices({ ...sizePrices, [size]: e.target.value })}
-                                    className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                                    placeholder="Precio en Lempiras"
-                                    min="0"
-                                    step="0.01"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-700">Cantidad {size}</label>
-                                  <input
-                                    type="number"
-                                    value={sizeQuantities[size as keyof typeof sizeQuantities]}
-                                    onChange={(e) => setSizeQuantities({ ...sizeQuantities, [size]: e.target.value })}
-                                    className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                                    placeholder="Cantidad disponible"
-                                    min="0"
-                                  />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                <div className="mt-4 space-y-4">
+                {["LACE", "SUPERFINE", "FINE", "LIGHT", "MEDIUM", "BULKY", "SUPERBULKY", "JUMBO"].map((size) => (
+                  <div key={size} className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Precio {size}</label>
+                      <input
+                        type="number"
+                        value={sizePrices[sizeMapping[size]]}
+                        onChange={(e) =>
+                          setSizePrices({ ...sizePrices, [sizeMapping[size]]: e.target.value })
+                        }
+                        className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
+                        placeholder="Precio en Lempiras"
+                        min="0"
+                        step="0.01"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Cantidad {size}</label>
+                      <input
+                        type="number"
+                        value={sizeQuantities[sizeMapping[size]]}
+                        onChange={(e) =>
+                          setSizeQuantities({ ...sizeQuantities, [sizeMapping[size]]: e.target.value })
+                        }
+                        className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
+                        placeholder="Cantidad disponible"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
                         )}
           {/*Marca */}
           <div>

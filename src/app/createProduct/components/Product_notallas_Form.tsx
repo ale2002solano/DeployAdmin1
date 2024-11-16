@@ -2,7 +2,8 @@ import React, { useState, useRef,useEffect } from "react";
 import { fetchCategories } from "@services/product";
 import UploadModal from "./subirFotos";
 import Image from 'next/image';
-import { Category } from "@interfaces/product";
+import { createProductWithSize, createProductWithoutSize } from "@services/product";
+import { Category, ProductWithSize,ProductWithoutSize } from "@interfaces/product";
 
 const ProductForm: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -107,40 +108,59 @@ const ProductForm: React.FC = () => {
     setkeywords((prevKeywords) => prevKeywords.filter((cat) => cat !== keyword));
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submit triggered");
-
+  
     if (!isCreatingProduct) {
       console.log("isCreatingProduct flag is false, skipping submission");
       return;
     }
-
-    const newProduct = productType === "Producto con talla" ? {
-      productName,
-      description,
-      sizePrices,
-      sizeQuantities,
-      mainImage,
-      galleryImages: galleryImages.length > 0 ? galleryImages : null,
-      keywords,
-      categoryId: selectedCategoryIds
-    } : {
-      productName,
-      description,
-      price: parseFloat(price),
-      stock: parseInt(stock, 10),
-      mainImage,
-      galleryImages: galleryImages.length > 0 ? galleryImages : null,
-      keywords,
-      categoryId: selectedCategoryIds
-    };
-
-    console.log("New Product:", newProduct);
-
-    // Resetting the state after product creation
-    setIsCreatingProduct(false); // Reset the flag
-    resetForm();
+  
+    try {
+      if (productType === "Producto con talla") {
+        const newProduct: ProductWithSize = {
+          productName,
+          description,
+          categories: selectedCategoryIds,
+          mainImage: mainImage || "",
+          galleryImages: galleryImages.length > 0 ? galleryImages : null,
+          sizePrices: {
+            ...Object.fromEntries(
+              Object.entries(sizePrices).map(([size, price]) => [size, price === "0" || price.trim() === "" ? null : parseFloat(price)])
+            ),
+          },
+          sizeQuantities: {
+            ...Object.fromEntries(
+              Object.entries(sizeQuantities).map(([size, quantity]) => [size, quantity === "0" || quantity.trim() === "" ? null : parseInt(quantity, 10)])
+            ),
+          },
+          keywords,
+        };
+        console.log("Enviando producto con talla:", newProduct);
+        const response = await createProductWithSize(newProduct);
+        console.log("Respuesta del servidor (con talla):", response);
+      } else {
+        const newProduct: ProductWithoutSize = {
+          productName,
+          price: parseFloat(price),
+          stock: parseInt(stock, 10),
+          description,
+          categories: selectedCategoryIds.map((id) => id.toString()),
+          mainImage: mainImage || "",
+          galleryImages,
+          keywords,
+        };
+        console.log("Enviando producto sin talla:", newProduct);
+        const response = await createProductWithoutSize(newProduct);
+        console.log("Respuesta del servidor (sin talla):", response);
+      }
+  
+      // Resetea el formulario tras la creación exitosa
+      setIsCreatingProduct(false);
+      resetForm();
+    } catch (error) {
+      console.error("Error al crear el producto:", error);
+    }
   };
 
   const handleCreateProduct = () => {

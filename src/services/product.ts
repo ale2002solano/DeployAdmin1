@@ -1,5 +1,5 @@
-import { Category } from "@interfaces/product";
-
+import { Category, ProductWithoutSize, ProductWithSize } from "@interfaces/product";
+import axios from "axios";
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData();
@@ -57,5 +57,29 @@ export const fetchCategories = async (): Promise<Category[]> => {
   } catch (error) {
       console.error('Error fetching categories:', error);
       return [];
+  }
+};
+
+const BASE_URL = "https://deploybackenddiancrochet.onrender.com/admin/create/producto";
+
+export const createProductWithSize = async (product: ProductWithSize) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/contalla`, product);
+    console.log("Producto con talla creado:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear producto con talla:", error);
+    throw error;
+  }
+};
+
+export const createProductWithoutSize = async (product: ProductWithoutSize) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/sintalla`, product);
+    console.log("Producto sin talla creado:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear producto sin talla:", error);
+    throw error;
   }
 };
