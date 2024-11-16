@@ -20,21 +20,41 @@ const ProductForm: React.FC = () => {
   const [keywordInput, setkeywordInput] = useState("");
   const [keywords, setkeywords] = useState<string[]>([]);
 
-  const [categories, setCategories] = useState<Category[]>([]);
-    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  // Estados para manejar las categorías y el menú
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
+    // Carga de categorías
     useEffect(() => {
       const getCategories = async () => {
-          const fetchedCategories = await fetchCategories();
-          setCategories(fetchedCategories);
+        const fetchedCategories = await fetchCategories();
+        setCategories(fetchedCategories);
       };
       getCategories();
-  }, []);
+    }, []);
 
-  const handleCategorySelect = (id: number) => {
-      setSelectedCategoryId(id);
-      console.log("Selected category ID:", id);
-  };
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+          setIsDropdownOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+    
+    // Agregar o quitar categorías seleccionadas
+    const handleCategoryToggle = (id: number) => {
+      setSelectedCategoryIds((prevSelected) =>
+        prevSelected.includes(id)
+          ? prevSelected.filter((categoryId) => categoryId !== id)
+          : [...prevSelected, id]
+      );
+    };
 
   // Size-specific states for "Producto con talla"
   const [sizePrices, setSizePrices] = useState({
@@ -102,18 +122,18 @@ const ProductForm: React.FC = () => {
       sizePrices,
       sizeQuantities,
       mainImage,
-      galleryImages,
+      galleryImages: galleryImages.length > 0 ? galleryImages : null,
       keywords,
-      categoryId: selectedCategoryId
+      categoryId: selectedCategoryIds
     } : {
       productName,
       description,
       price: parseFloat(price),
       stock: parseInt(stock, 10),
       mainImage,
-      galleryImages,
+      galleryImages: galleryImages.length > 0 ? galleryImages : null,
       keywords,
-      categoryId: selectedCategoryId
+      categoryId: selectedCategoryIds
     };
 
     console.log("New Product:", newProduct);
@@ -139,6 +159,8 @@ const ProductForm: React.FC = () => {
     setkeywords([]);
     setSizePrices({ XL: "", L: "", M: "", S: "", XS: "" });
     setSizeQuantities({ XL: "", L: "", M: "", S: "", XS: "" });
+    setSelectedCategoryIds([]);
+
   };
 
 
@@ -163,27 +185,41 @@ const ProductForm: React.FC = () => {
           </div>
           
           {/* Categorías (Carrusel) */}
-          <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                  Categorías
+          <div className="relative text-start" ref={dropdownRef}>
+              <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                Categorías
               </label>
-              <select
-                  id="category"
-                  value={selectedCategoryId || ""}
-                  onChange={(e) => handleCategorySelect(Number(e.target.value))}
-                  className="p-2 border w text-black rounded-lg w-full"
+              <button
+                type="button"
+                className="w-full p-2 bg-white text-start rounded-lg border text-black mt-[8px]"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                  <option value="" disabled>
-                      Selecciona una categoría
-                  </option>
-                  {categories.map((category) => (
-                      <option key={category.ID_CATEGORIA} value={category.ID_CATEGORIA}>
+                {selectedCategoryIds.length > 0
+                  ? `Seleccionadas (${selectedCategoryIds.length})`
+                  : "Selecciona categorías"}
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute z-10 mt-2 w-full bg-white rounded-lg ">
+                  <div className="max-h-60 overflow-y-auto p-2">
+                    {categories.map((category) => (
+                      <div key={category.ID_CATEGORIA} className="flex items-center space-x-2 p-1">
+                        <input
+                          type="checkbox"
+                          id={`category-${category.ID_CATEGORIA}`}
+                          value={category.ID_CATEGORIA}
+                          checked={selectedCategoryIds.includes(category.ID_CATEGORIA)}
+                          onChange={() => handleCategoryToggle(category.ID_CATEGORIA)}
+                          className="text-black"
+                        />
+                        <label htmlFor={`category-${category.ID_CATEGORIA}`} className="text-black">
                           {category.CATEGORIA}
-                      </option>
-                  ))}
-              </select>
-          </div>
-
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           {/* Product Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Nombre del Producto</label>
@@ -272,7 +308,7 @@ const ProductForm: React.FC = () => {
 
           {/* Keywoard Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Keywoard</label>
+            <label className="block text-sm font-medium text-gray-700">Keyword</label>
             <input
               type="text"
               value={keywordInput}

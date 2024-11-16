@@ -265,18 +265,19 @@ const MaterialForm: React.FC = () => {
                                 </div>
                               </div>
                             ))}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Marca</label>
-                                <textarea
-                                  value={marca}
-                                  onChange={(e) => setMarca(e.target.value)}
-                                  required
-                                  className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                                  placeholder="Escribe la marca"
-                                />
-                              </div>
                           </div>
                         )}
+          {/*Marca */}
+          <div>
+               <label className="block text-sm font-medium text-gray-700">Marca</label>
+                  <textarea
+                    value={marca}
+                    onChange={(e) => setMarca(e.target.value)}
+                    required
+                    className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
+                    placeholder="Escribe la marca"
+                    />
+          </div>              
 
           {/* Description */}
           <div>
@@ -292,7 +293,7 @@ const MaterialForm: React.FC = () => {
           
           {/* Keywoard Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Keywoard</label>
+            <label className="block text-sm font-medium text-gray-700">Keyword</label>
             <input
               type="text"
               value={keywordInput}
