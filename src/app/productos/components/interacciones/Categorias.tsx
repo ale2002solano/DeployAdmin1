@@ -25,7 +25,7 @@ export default function Categorias () {
         <div ref={menuRef} className="relative">
             <div onClick={() => setIsOpen(!isOpen)} className="hover:text-gray-800 cursor-pointer z-2 font-lekton font-semibold text-gray-700 flex justify-center items-center mt-3">
             <div>
-                Categorías
+                Tipos
             </div>
             <div>
                 <FontAwesomeIcon icon={ faChevronDown } className='text-sm'/>
