@@ -2,7 +2,7 @@
 
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
-import EditMaterial from "../components/editMaterial";
+import EditMaterial from "./components/editMaterial";
 
 
 export default function Dashboard() {
