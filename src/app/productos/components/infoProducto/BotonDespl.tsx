@@ -1,16 +1,14 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons/faEllipsisH"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useEffect, useRef, useState } from 'react'
 
 export default function BotonDespl ({indexProduct} : {indexProduct : number}) {
     const [isOpen, setIsOpen] = useState(false);
     const botonRef = useRef<HTMLDivElement>(null);
     const [edit, setEdit] = useState(0);
     const [newProduct, setNewProduct] = useState(0);
-
-    console.log(indexProduct)
 
     const handleNewProduct = (index: number) => {
         setNewProduct(index);
@@ -47,10 +45,10 @@ export default function BotonDespl ({indexProduct} : {indexProduct : number}) {
 
         {isOpen && (
             <div className="w-40 absolute bg-white rounded-md shadow-lg z-10 font-lekton text-base">
-                <a onClick={() => {handleEditProduct(indexProduct)}} href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-200 ">
+                <a onClick={() => {handleEditProduct(indexProduct)}} href="#" className="block rounded-md px-4 py-2 text-gray-700 hover:bg-gray-200 ">
                     Editar
                 </a>
-                <a onClick={() => {handleNewProduct(indexProduct)}} href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-200">
+                <a onClick={() => {handleNewProduct(indexProduct)}} href="#" className="block rounded-md px-4 py-2 text-gray-700 hover:bg-gray-200">
                     Eliminar
                 </a>
             </div>

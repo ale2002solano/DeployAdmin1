@@ -17,14 +17,9 @@ export default function productos () {
                 <div className=" z-2 w-full h-full bg-[#COCOCO]">
                     <div className="h-[8%]">
                         <Titulo/></div>
-                    <div className="h-[14%]">
+                    <div className="h-[92%]">
                         <Interactions/></div>
-                    <div className="h-[78%] flex flex-wrap overflow-y-auto  pl-4">
-                        <Products
-                            indexType ={0}
-                            />
                     </div>
-                </div>
             </div>
             <div><Footer /></div>
         </div>

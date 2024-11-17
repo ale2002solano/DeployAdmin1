@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getProductosPorTipo, getProducts } from '@services/product';
 import { InfoProductos } from '@interfaces/product';
 import DetalleProducto from './infoProducto/DetalleProducto';
@@ -14,10 +14,10 @@ export default function Products ({indexType} : {indexType : number}) {
 
     const totalProducts = productos.length;
 
-    console.log(indexType)
     // Calculamos x como el número de páginas (o grupos) en base a 16 productos por grupo
     const pagesNumber = Math.ceil(totalProducts / 15);
     const divNumbers = Array.from({ length: pagesNumber }, (_, i) => i + 1);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
 
     const handlePageNumber = (index: number) => {
@@ -45,47 +45,33 @@ export default function Products ({indexType} : {indexType : number}) {
         }
     };
 
-    if (indexType == 0) {
-        useEffect(() => {
-            async function fetchGets() {
-                try {
-                const res = await getProducts();
-                setProductos(res);
-                } catch (error) {
-                console.error("Error al traer productos:", error);
+    useEffect(() => {
+        async function fetchProducts() {
+          setProductsSplit(0); // Reinicia la división de productos al cambiar el tipo
+          setPageNumber(1); // Reinicia la paginación al cambiar el tipo
+            try {
+                if (indexType === 0) {
+                    const res = await getProducts();
+                    setProductos(res);
+                } else {
+                    const res = await getProductosPorTipo(indexType);
+                    setProductos(res);
                 }
+            } catch (error) {
+                console.error('Error al traer productos:', error);
             }
-            fetchGets();
-        }, []);
-    }
-    else {
-
-        useEffect(() => {
-            async function fetchGets() {
-                try {
-                const res = await getProductosPorTipo(indexType);
-                setProductos(res);
-                } catch (error) {
-                console.error("Error al traer productos:", error);
-                }
-            }
-            fetchGets();
-        }, []);
-
-    }
-
-    console.log(productos);
+        }
+        fetchProducts();
+    }, [indexType]);
 
     useEffect(() => {
-        // Desplazarse hacia arriba cuando se cambia la página
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth',
-            });
-        }, [productsSplit]);
+        if (scrollRef.current) {
+            scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [pageNumber, productsSplit]);
 
     return (
-        <div className="w-full h-full flex flex-wrap">
+        <div ref={scrollRef} className="w-full h-full  overflow-y-auto">
             <div className="w-full h-90% flex flex-wrap">
             {productos
                 .slice(productsSplit, productsSplit + 16)
