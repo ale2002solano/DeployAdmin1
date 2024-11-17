@@ -1,5 +1,6 @@
-import { Category } from "@interfaces/product";
+import { Category, InfoProductos } from "@interfaces/product";
 
+const API_URL = "https://deploybackenddiancrochet.onrender.com/admin";
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData();
@@ -59,3 +60,24 @@ export const fetchCategories = async (): Promise<Category[]> => {
       return [];
   }
 };
+
+export const getProducts = async(): Promise<InfoProductos[]> =>{
+  const res = await fetch(`${API_URL}/productos`);
+  if (!res.ok) {
+    throw new Error("Error al traer productos");
+  }
+  const data = await res.json();
+  return data.productos;
+}
+
+export const getProductosPorTipo = async (id: number): Promise<InfoProductos[]> => {
+  try {
+    const response = await fetch(`${API_URL}/prodcutos/categoria/${id}`);
+    const data = await response.json();
+    return data.productosConCategoria; 
+  } catch (error) {
+    console.error('Error al obtener productos por tipo:', error);
+    return []; 
+  }
+};
+

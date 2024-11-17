@@ -20,16 +20,12 @@ export default function productos () {
                     <div className="h-[14%]">
                         <Interactions/></div>
                     <div className="h-[78%] flex flex-wrap overflow-y-auto  pl-4">
-                        <Products/>
-                        <Products/>
-                        <Products/>
-                        <Products/>
-                        <Products/>
-                        <Products/>
+                        <Products
+                            indexType ={0}
+                            />
                     </div>
                 </div>
             </div>
-            
             <div><Footer /></div>
         </div>
     )
