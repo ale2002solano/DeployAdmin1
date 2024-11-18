@@ -15,7 +15,7 @@ export default function EditProduct () {
     //const [editing, setEditing] = useState(true);
 
     useEffect(() => {  
-      const id = "298"; // ID de prueba
+      const id = "302"; // ID de prueba
       const loadProductoInfo = async () => {
         const response = await fetchProductMaterial(id);
   

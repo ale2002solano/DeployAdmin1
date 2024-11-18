@@ -14,7 +14,7 @@ export default function EditMaterial () {
     //const [editing, setEditing] = useState(true);
 
     useEffect(() => {  
-      const id = "33"; // ID de prueba
+      const id = "301"; // ID de prueba
       const loadProductoInfo = async () => {
         const response = await fetchProductMaterial(id);
   
@@ -224,7 +224,7 @@ export default function EditMaterial () {
                           </label>
                           <select
                               id="category"
-                              value={selectedCategoryId ||""}
+                              defaultValue={selectedCategoryId ||""}
                               onChange={(e) => handleCategorySelect(Number(e.target.value))}
                               className="p-2 border w text-black rounded-lg w-full"
                           >
@@ -252,7 +252,7 @@ export default function EditMaterial () {
                                 <input
                                   type="number"
                                   className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                                  value={backendSize ? sizes[backendSize]?.precio || 0 : 0} // Si no existe el grosor, ponemos 0
+                                  defaultValue={backendSize ? sizes[backendSize]?.precio || 0 : 0} // Si no existe el grosor, ponemos 0
                                   onChange={(e) =>
                                     setSizes((prevSizes) => ({
                                       ...prevSizes,
@@ -269,7 +269,7 @@ export default function EditMaterial () {
                                 <input
                                   type="number"
                                   className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                                  value={backendSize ? sizes[backendSize]?.cantidad || 0 : 0} // Si no existe el grosor, ponemos 0
+                                  defaultValue={backendSize ? sizes[backendSize]?.cantidad || 0 : 0} // Si no existe el grosor, ponemos 0
                                   onChange={(e) =>
                                     setSizes((prevSizes) => ({
                                       ...prevSizes,
