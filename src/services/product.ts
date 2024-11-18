@@ -1,5 +1,6 @@
-import { Category, ProductWithoutSize, ProductWithSize } from "@interfaces/product";
+import { Category, ProductWithoutSize, ProductWithSize, InfoProductos } from "@interfaces/product";
 import axios from "axios";
+const API_URL = "https://deploybackenddiancrochet.onrender.com/admin";
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData();
@@ -83,3 +84,24 @@ export const createProductWithoutSize = async (product: ProductWithoutSize) => {
     throw error;
   }
 };
+
+export const getProducts = async(): Promise<InfoProductos[]> =>{
+  const res = await fetch(`${API_URL}/productos`);
+  if (!res.ok) {
+    throw new Error("Error al traer productos");
+  }
+  const data = await res.json();
+  return data.productos;
+}
+
+export const getProductosPorTipo = async (id: number): Promise<InfoProductos[]> => {
+  try {
+    const response = await fetch(`${API_URL}/prodcutos/categoria/${id}`);
+    const data = await response.json();
+    return data.productosConCategoria; 
+  } catch (error) {
+    console.error('Error al obtener productos por tipo:', error);
+    return []; 
+  }
+};
+
