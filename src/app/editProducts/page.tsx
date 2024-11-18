@@ -2,7 +2,8 @@
 
 import Footer from "components/Footer";
 import Navbar from "components/navbar";
-import EditMaterial from "../components/editMaterial";
+import EditProduct from "./components/EditForm";
+
 
 
 export default function Dashboard() {
@@ -11,7 +12,7 @@ export default function Dashboard() {
       <Navbar/> 
         <main className="bg-slate-50 flex-grow justify-center items-center mt-[4.3%] h-full">
           <div className='flex justify-center items-center'>
-            <EditMaterial/>
+            <EditProduct/>
           </div>
         </main>
         <Footer />

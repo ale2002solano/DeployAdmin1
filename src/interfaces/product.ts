@@ -23,6 +23,44 @@ export interface ProductWithSize {
     galleryImages: string[];
     keywords: string[];
   }
+
+  export interface Product {
+    id_producto: number;
+    nombre_prod: string;
+    precio_venta: number;
+    descripcion: string;
+    cantidad_disp: number | null;
+    tipo_prod: string;
+    color: string | null;
+    tallas: string | null;
+    grosores: Record<string, { cantidad: number; precio: number }>;
+    imagen_principal: string;
+    imagenes_extra: string[];
+    nombre_marca: string;
+  }
+
+  export interface Grosor {
+    cantidad: number | null;
+    precio: number | null;
+  }
+  
+  export interface ProductoInfo {
+    productoInfo: {
+      id_producto: number;
+      nombre_prod: string;
+      precio_venta: number;
+      descripcion: string;
+      cantidad_disp: number;
+      tipo_prod: string;
+      color: string;
+      tallas: Record<string, { cantidad: number; precio: number }>;
+      grosores: Record<string, { cantidad: number; precio: number }>;
+      imagen_principal: string;
+      imagenes_extra: string[];
+      nombre_marca: string;
+      categorias:string[];
+    };
+  }
 export interface InfoProductos{
     id_producto: number;
     nombre_prod: string;

@@ -32,8 +32,10 @@ const ProductForm: React.FC = () => {
       const getCategories = async () => {
         const fetchedCategories = await fetchCategories();
         setCategories(fetchedCategories);
+        console.log(fetchedCategories)
       };
       getCategories();
+      
     }, []);
 
     useEffect(() => {
@@ -320,7 +322,7 @@ const ProductForm: React.FC = () => {
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              required
+              
               className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
               placeholder="Describe el producto"
             />
@@ -333,7 +335,7 @@ const ProductForm: React.FC = () => {
               type="text"
               value={keywordInput}
               onChange={(e) => setkeywordInput(e.target.value)}
-              required
+              
               onKeyDown={handleKeywordAdd}
               className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
               placeholder="Escribe y presiona Enter o Espacio para agregar"

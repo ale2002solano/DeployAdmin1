@@ -25,3 +25,5 @@ export interface MaterialWithoutTalla {
     categoryId: number; // ID de la categoría siempre debe estar definido
     marca: string;
   }
+
+  
