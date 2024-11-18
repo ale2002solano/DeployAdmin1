@@ -15,7 +15,7 @@ export default function EditProduct () {
     //const [editing, setEditing] = useState(true);
 
     useEffect(() => {  
-      const id = "133"; // ID de prueba
+      const id = "298"; // ID de prueba
       const loadProductoInfo = async () => {
         const response = await fetchProductMaterial(id);
   
@@ -198,7 +198,7 @@ export default function EditProduct () {
               <input
                 type="text"
                 required
-                value={productoInfo?.nombre_prod}
+                defaultValue={productoInfo?.nombre_prod}
                 className="mt-2 p-2 border border-gray-300 rounded-lg w-full text-black"
                 placeholder="Escribe el nombre del producto"
               />
@@ -225,7 +225,7 @@ export default function EditProduct () {
                           <input
                             type="checkbox"
                             id={`product-${category.ID_CATEGORIA}`}
-                            value={category.CATEGORIA}
+                            defaultValue={category.CATEGORIA}
                             checked={selectedCategoryNames.includes(category.CATEGORIA)}
                             onChange={() => handleCategoryToggle(category.CATEGORIA)}
                             className="text-black"
@@ -248,7 +248,7 @@ export default function EditProduct () {
                           <input
                             type="number"
                             required
-                            value={productoInfo?.precio_venta}
+                            defaultValue={productoInfo?.precio_venta}
                             className="mt-2 p-2 text-black border border-gray-300 rounded-lg w-full"
                             placeholder="Precio en Lempiras"
                             min="0"
@@ -260,7 +260,7 @@ export default function EditProduct () {
                           <input
                             type="number"
                             required
-                            value={productoInfo?.cantidad_disp}
+                            defaultValue={productoInfo?.cantidad_disp}
                             className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
                             placeholder="Cantidad disponible"
                             min="0"
@@ -283,7 +283,7 @@ export default function EditProduct () {
                                 <input
                                   type="number"
                                   className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                                  value={backendSize ? sizes[backendSize]?.precio || 0 : 0} // Si no existe el grosor, ponemos 0
+                                  defaultValue={backendSize ? sizes[backendSize]?.precio || 0 : 0} // Si no existe el grosor, ponemos 0
                                   onChange={(e) =>
                                     setSizes((prevSizes) => ({
                                       ...prevSizes,
@@ -300,7 +300,7 @@ export default function EditProduct () {
                                 <input
                                   type="number"
                                   className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                                  value={backendSize ? sizes[backendSize]?.cantidad || 0 : 0} // Si no existe el grosor, ponemos 0
+                                  defaultValue={backendSize ? sizes[backendSize]?.cantidad || 0 : 0} // Si no existe el grosor, ponemos 0
                                   onChange={(e) =>
                                     setSizes((prevSizes) => ({
                                       ...prevSizes,
@@ -322,7 +322,7 @@ export default function EditProduct () {
               <label className="block text-sm font-medium text-gray-700">Descripción</label>
               <textarea
                 required
-                value={productoInfo?.descripcion}
+                defaultValue={productoInfo?.descripcion}
                 className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
                 placeholder="Describe el producto"
               />

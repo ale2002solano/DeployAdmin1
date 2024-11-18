@@ -16,3 +16,58 @@ export const fetchProductMaterial = async (id: string): Promise<ProductoInfo | n
     return null;
   }
 };
+
+// updateProduct.ts
+import { ProductWithSize, ProductWithoutSize } from "@interfaces/product";
+
+const API_BASE_URL = "https://deploybackenddiancrochet.onrender.com/admin/update/producto";
+
+export const updateProductWithSize = async (
+  id: string,
+  productData: ProductWithSize
+): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/contalla/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!response.ok) {
+      console.error("Error actualizando producto con talla:", response.statusText);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    return false;
+  }
+};
+
+export const updateProductWithoutSize = async (
+  id: string,
+  productData: ProductWithoutSize
+): Promise<boolean> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/sintalla/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!response.ok) {
+      console.error("Error actualizando producto sin talla:", response.statusText);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    return false;
+  }
+};

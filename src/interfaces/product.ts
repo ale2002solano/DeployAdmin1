@@ -46,7 +46,7 @@ export interface ProductWithSize {
   
   export interface ProductoInfo {
     productoInfo: {
-      id_producto: number;
+      id_producto: string;
       nombre_prod: string;
       precio_venta: number;
       descripcion: string;
