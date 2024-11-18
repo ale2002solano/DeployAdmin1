@@ -1,21 +1,86 @@
 import UploadModal from "../../createProduct/components/subirFotos";
 import Image from 'next/image';
-import React,{useState} from "react";
-
-
+import React,{useEffect, useState} from "react";
+import { ProductoInfo } from "@interfaces/product";
+import { fetchProductMaterial } from "../helper/getMaterial";
+import { fetchCategoriesMaterials } from "@services/materials";
+import { categoriasMateriales } from "@interfaces/materials";
 export default function EditMaterial () {
-    const [productType,setProductType] = useState("Producto sin talla");
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [galleryImages, setGalleryImages] = useState<string[]>([]);
-    const [isGallery, setIsGallery] = useState(false);
-    const [mainImage, setMainImage] = useState<string | null>(null);
     const [keywordInput, setkeywordInput] = useState("");
     const [keywords, setkeywords] = useState<string[]>([]);
-    const handleRemoveGalleryImage = (url: string) => {
-        setGalleryImages((prevImages) => prevImages.filter((img) => img !== url));
+    const [productoInfo, setProductoInfo] = useState<ProductoInfo["productoInfo"] | null>(null);
+    //const [editing, setEditing] = useState(true);
+
+    useEffect(() => {  
+      const id = "285"; // ID de prueba
+      const loadProductoInfo = async () => {
+        const response = await fetchProductMaterial(id);
+  
+        if (response && response.productoInfo) {
+          console.log("Producto recibido:", response.productoInfo);
+          setProductoInfo(response.productoInfo);
+        } else {
+          console.log("No se recibieron datos del producto.");
+        }
       };
-      const handleProductTypeChange = (type: string) => setProductType(type);
+  
+      loadProductoInfo();
+    }, []);
+
+    const [galleryImages, setGalleryImages] = useState<string[]>(productoInfo?.imagenes_extra || []);
+    const [isGallery, setIsGallery] = useState(false);
     
+    useEffect(() => {
+      // Si productoInfo cambia y tiene imagenes_extra, actualizar galleryImages
+      if (productoInfo?.imagenes_extra) {
+        setGalleryImages(productoInfo.imagenes_extra);
+      }
+    }, [productoInfo]);
+
+    const handleRemoveGalleryImage = (url: string) => {
+      setGalleryImages((prevImages) => prevImages.filter((img) => img !== url));
+    };
+
+    const [productType, setProductType] = useState<string>("");
+
+    useEffect(() => {
+  if (productoInfo) {
+    switch (true) {
+      case productoInfo?.tallas !== null && productoInfo.tipo_prod === "Producto":
+        setProductType("Producto con medidas");
+        break;
+    
+      case productoInfo?.tallas === null && productoInfo?.tipo_prod === "Producto":
+        setProductType("Producto con no medidas");
+        break;
+    
+      case productoInfo?.grosores !== null && productoInfo?.tipo_prod === "Material":
+        setProductType("Material con grosores");
+        break;
+    
+      case productoInfo?.grosores === null && productoInfo?.tipo_prod === "Material":
+        setProductType("Material sin grosor");
+        break;
+    
+      default:
+        break;
+    }
+  }
+}, [productoInfo]);
+    
+
+
+  const handleProductTypeChange = (type: string) => {
+    setProductType(type);
+  };
+
+  const [mainImage, setMainImage] = useState<string | null>(productoInfo?.imagen_principal || null);
+  useEffect(() => {
+    setMainImage(productoInfo?.imagen_principal || null);
+  }, [productoInfo]);
+
 
       const handleOpenModal = (forGallery: boolean) => {
         setIsGallery(forGallery);
@@ -48,6 +113,47 @@ export default function EditMaterial () {
         setkeywords((prevKeywords) => prevKeywords.filter((cat) => cat !== keyword));
       };
 
+       // Inicializar el estado de los grosores con la data de productoInfo.grosores
+      const [sizes, setSizes] = useState<Record<string, { cantidad: number, precio: number }>>({});
+
+      // Mapeo entre los nombres que vienen del backend y los que queremos mostrar
+        const sizeMap: Record<string, string> = {
+          "Lace": "LACE",
+          "Super fine": "SUPERFINE",
+          "Fine": "FINE",
+          "Light": "LIGHT",
+          "Medium": "MEDIUM",
+          "Bulky": "BULKY",
+          "Super bulky": "SUPERBULKY",
+          "Jumbo": "JUMBO"
+        };
+
+         // Actualizar el estado de sizes cuando productoInfo.grosores cambie
+          useEffect(() => {
+            if (productoInfo?.grosores) {
+              setSizes(productoInfo.grosores);
+            }
+          }, [productoInfo?.grosores]);
+
+        // Lista de grosores predefinidos que queremos mostrar en la interfaz
+        const allSizes = ["LACE", "SUPERFINE", "FINE", "LIGHT", "MEDIUM", "BULKY", "SUPERBULKY", "JUMBO"];
+          
+        const [categories, setCategories] = useState<categoriasMateriales[]>([]);
+          const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+
+          useEffect(() => {
+            const getCategories = async () => {
+                const fetchedCategories = await fetchCategoriesMaterials();
+                setCategories(fetchedCategories);
+            };
+            getCategories();
+        }, []);
+        
+        const handleCategorySelect = (id: number) => {
+          setSelectedCategoryId(id);
+          console.log("Selected category ID:", id);
+      };
+        
 
     return (
         <div className="p-8 bg-gray-50 rounded-lg shadow-lg max-w-5xl mx-auto">
@@ -58,16 +164,18 @@ export default function EditMaterial () {
           <div className="space-y-6">
             <label className="block text-sm font-medium text-black">Tipo Producto</label>
             <div className="flex space-x-4">
-              <select
-                id="productType"
-                value={productType}
-                onChange={(e) => handleProductTypeChange(e.target.value)}
-                className="p-2 border w text-black rounded-lg w-full"
-              >
-                <option className="text-black" value="Producto sin talla">Material sin Grosor</option>
-                <option value="Producto con talla">Material con grosor</option>
-              </select>
-            </div>
+            <select
+              id="productType"
+              value={productType}
+              onChange={(e) => handleProductTypeChange(e.target.value)}
+              className="p-2 border w text-black rounded-lg w-full"
+            >
+              <option className="text-black" defaultValue="Material sin grosor">Material sin grosor</option>
+              <option defaultValue="Material con grosores">Material con grosor</option>
+              <option defaultValue="Producto con no medidas">Producto sin tallas</option>
+              <option defaultValue="Producto con medidas">Producto con tallas</option>
+            </select>
+          </div>
   
             {/* Product Name */}
             <div>
@@ -75,20 +183,21 @@ export default function EditMaterial () {
               <input
                 type="text"
                 required
+                defaultValue={productoInfo?.nombre_prod}
                 className="mt-2 p-2 border border-gray-300 rounded-lg w-full text-black"
                 placeholder="Escribe el nombre del producto"
               />
             </div>
             {/* Price and Stock */}
-            {productType === "Producto sin talla" ? (
+            {productType === "Material sin grosor" ? (
               <div>
-                    
                 <div className="grid grid-cols-2 gap-4 mt-[24px]">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 ">Precio</label>
                           <input
                             type="number"
                             required
+                            defaultValue={productoInfo?.precio_venta}
                             className="mt-2 p-2 text-black border border-gray-300 rounded-lg w-full"
                             placeholder="Precio en Lempiras"
                             min="0"
@@ -100,45 +209,88 @@ export default function EditMaterial () {
                           <input
                             type="number"
                             required
+                            defaultValue={productoInfo?.cantidad_disp}
                             className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
                             placeholder="Cantidad disponible"
                             min="0"
                           />
                         </div>
+                        
                 </div>
+                {/* Categorías (Carrusel) */}
+                <div>
+                          <label htmlFor="category" className="block text-sm font-medium mt-[24px] text-gray-700">
+                              Categorías
+                          </label>
+                          <select
+                              id="category"
+                              value={selectedCategoryId ||""}
+                              onChange={(e) => handleCategorySelect(Number(e.target.value))}
+                              className="p-2 border w text-black rounded-lg w-full"
+                          >
+                              <option value={productoInfo?.categorias} >
+                                  {productoInfo?.categorias}
+                              </option>
+                              {categories.map((category) => (
+                                  <option key={category.ID_CATEGORIA} value={category.ID_CATEGORIA}>
+                                      {category.CATEGORIA}
+                                  </option>
+                              ))}
+                          </select>
+                        </div> 
                 </div>
                 ) : (
                   <div className="mt-4 space-y-4">
-                  {["LACE", "SUPERFINE", "FINE", "LIGHT", "MEDIUM", "BULKY", "SUPERBULKY", "JUMBO"].map((size) => (
-                    <div key={size} className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Precio {size}</label>
-                        <input
-                          type="number"
-                          className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                          placeholder="Precio en Lempiras"
-                          min="0"
-                          step="0.01"
-                        />
+                        {allSizes.map((size) => {
+                          // Comprobamos si el nombre del tamaño existe en los grosores del backend
+                          const backendSize = Object.keys(sizes).find(key => sizeMap[key] === size);
+
+                          return (
+                            <div key={size} className="grid grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700">Precio {size}</label>
+                                <input
+                                  type="number"
+                                  className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
+                                  value={backendSize ? sizes[backendSize]?.precio || 0 : 0} // Si no existe el grosor, ponemos 0
+                                  onChange={(e) =>
+                                    setSizes((prevSizes) => ({
+                                      ...prevSizes,
+                                      [backendSize!]: { ...prevSizes[backendSize!], precio: parseFloat(e.target.value) }
+                                    }))
+                                  }
+                                  placeholder="Precio en Lempiras"
+                                  min="0"
+                                  step="0.01"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700">Cantidad {size}</label>
+                                <input
+                                  type="number"
+                                  className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
+                                  value={backendSize ? sizes[backendSize]?.cantidad || 0 : 0} // Si no existe el grosor, ponemos 0
+                                  onChange={(e) =>
+                                    setSizes((prevSizes) => ({
+                                      ...prevSizes,
+                                      [backendSize!]: { ...prevSizes[backendSize!], cantidad: parseInt(e.target.value) }
+                                    }))
+                                  }
+                                  placeholder="Cantidad disponible"
+                                  min="0"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Cantidad {size}</label>
-                        <input
-                          type="number"
-                          className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                          placeholder="Cantidad disponible"
-                          min="0"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
                           )}
             {/*Marca */}
             <div>
                  <label className="block text-sm font-medium text-gray-700">Marca</label>
                     <textarea
                       required
+                      defaultValue={productoInfo?.nombre_marca}
                       className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
                       placeholder="Escribe la marca"
                       />
@@ -149,6 +301,7 @@ export default function EditMaterial () {
               <label className="block text-sm font-medium text-gray-700">Descripción</label>
               <textarea
                 required
+                defaultValue={productoInfo?.descripcion}
                 className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
                 placeholder="Describe el producto"
               />
@@ -159,9 +312,8 @@ export default function EditMaterial () {
               <label className="block text-sm font-medium text-gray-700">Keyword</label>
               <input
                 type="text"
-                value={keywordInput}
+                defaultValue={keywordInput}
                 onChange={(e) => setkeywordInput(e.target.value)}
-                required
                 onKeyDown={handleKeywordAdd}
                 className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
                 placeholder="Escribe y presiona Enter o Espacio para agregar"

@@ -32,8 +32,10 @@ const ProductForm: React.FC = () => {
       const getCategories = async () => {
         const fetchedCategories = await fetchCategories();
         setCategories(fetchedCategories);
+        console.log(fetchedCategories)
       };
       getCategories();
+      
     }, []);
 
     useEffect(() => {
