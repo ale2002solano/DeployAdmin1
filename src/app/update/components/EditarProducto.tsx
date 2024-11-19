@@ -2,13 +2,15 @@ import UploadModal from "../../createProduct/components/subirFotos";
 import Image from 'next/image';
 import React,{useEffect, useState, useRef} from "react";
 import { ProductoInfo } from "@interfaces/product";
-import { fetchProductMaterial } from "../helpers/fetchProduct";
+
 import { fetchCategories } from "@services/product";
 import { Category } from "@interfaces/product"; 
 import { ProductWithSizeUpdate, ProductWithoutSizeUpdate } from "@interfaces/product";
-import { updateProductWithSize,updateProductWithoutSize } from "../helpers/fetchProduct";
+import { fetchProductMaterial } from "../helper/UpdateMaterial";
+import { updateProductWithoutSize, updateProductWithSize } from "../helper/UpdateProduct";
 
-export default function EditProduct () {
+
+export default function EditarProducto () {
 
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
