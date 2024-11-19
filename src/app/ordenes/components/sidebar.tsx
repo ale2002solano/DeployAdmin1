@@ -5,6 +5,8 @@ import { TiArchive } from "react-icons/ti";
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 export default function SideBar() {
+// Redireccionar con router
+const router = useRouter();  // Usamos useRouter para navegar
 
 //Cambiar color de fondo de botones cuando se hace click        
     const [activeButton, setActiveButton] = useState<string | null>(null);
@@ -14,12 +16,12 @@ export default function SideBar() {
     if (button === 'orden') {
         router.push('/ordenes/all-ordens');
       } else if (button === 'product') {
-        // Aquí puedes añadir la lógica de navegación para "Todos los Productos" si es necesario
+        router.push('');
       }
     };
 
     return(
-        <div className='h-screen w-2/10 fixed top-0 left-0 bg-white p-5 border-gray-300 border-solid border'>
+        <div className='h-screen w-auto fixed top-0 left-0 bg-white p-5 border-gray-300 border-solid border'>
             <div className='flex flex-row flex-nowrap justify-start items-center content-around mb-5'>
                 <Image src="/img/logo.svg" alt="Logo" width={60} height={60} />
                 <h1 className='text-gray-950 ml-5 font-koulen'>Dian Crochet</h1>    
