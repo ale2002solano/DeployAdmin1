@@ -8,6 +8,7 @@ import { categoriasMateriales } from "@interfaces/materials";
 import { MaterialWithTallaUpdate, MaterialWithoutTallaUpdate } from "@interfaces/materials";
 import { updateMaterialWithSize, updateMaterialWithoutSize } from "../helper/UpdateMaterial";
 
+
 interface EditarMaterialProps {
   id: string; // Declara que el componente espera una prop `id` de tipo string
 }
@@ -42,7 +43,6 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
     const [productType, setProductType] = useState<string>("");
     const [buttonColor, setButtonColor] = useState<string>("bg-gray-200");
     const [editableProduct, setEditableProduct] = useState(productoInfo);
-
   
 
     useEffect(() => {
@@ -202,6 +202,8 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
           };
           console.log("Objeto que se envía para Producto con medidas:", productData);
           const success = await updateMaterialWithSize(editableProduct.id_producto, productData);
+          
+          window.location.reload();
           if (success) {
             console.log("Producto con medidas actualizado correctamente.");
           } else {
@@ -223,6 +225,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
           console.log("Objeto que se envía para Producto sin medidas:", productData);
     
           const success = await updateMaterialWithoutSize(editableProduct.id_producto, productData);
+          window.location.reload();
           if (success) {
             console.log("Producto sin medidas actualizado correctamente.");
           } else {

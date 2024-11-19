@@ -235,6 +235,7 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
             };
             console.log("Objeto que se envía para Producto con medidas:", productData);
             const success = await updateProductWithSize(editableProduct.id_producto, productData);
+            window.location.reload();
             if (success) {
               console.log("Producto con medidas actualizado correctamente.");
             } else {
@@ -255,8 +256,9 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
             console.log("Objeto que se envía para Producto sin medidas:", productData);
       
             const success = await updateProductWithoutSize(editableProduct.id_producto, productData);
+            window.location.reload();
             if (success) {
-              console.log("Producto sin medidas actualizado correctamente.");
+              
             } else {
               console.error("Error actualizando producto sin medidas.");
             }
