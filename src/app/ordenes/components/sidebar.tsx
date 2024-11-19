@@ -3,12 +3,19 @@ import Image from 'next/image';
 import { CiGrid42 } from "react-icons/ci";
 import { TiArchive } from "react-icons/ti";
 import React, { useState } from "react";
+import { useRouter } from 'next/navigation';
 export default function SideBar() {
 
 //Cambiar color de fondo de botones cuando se hace click        
     const [activeButton, setActiveButton] = useState<string | null>(null);
     const handleButtonClick = (button: string) => {
         setActiveButton(button);
+    // Redirigir a la ruta correspondiente
+    if (button === 'orden') {
+        router.push('/ordenes/all-ordens');
+      } else if (button === 'product') {
+        // Aquí puedes añadir la lógica de navegación para "Todos los Productos" si es necesario
+      }
     };
 
     return(

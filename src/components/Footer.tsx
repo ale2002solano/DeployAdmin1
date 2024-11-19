@@ -1,9 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
+interface FooterProps {
+  className?: string; // Añadimos la propiedad className
+}
 
-
-export default function Footer(){
+export default function Footer({ className }: FooterProps){
     return(
         <footer className="bg-black text-white py-4 font-koulen">
       <div className="container mx-auto text-center">
