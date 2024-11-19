@@ -8,7 +8,11 @@ import { categoriasMateriales } from "@interfaces/materials";
 import { MaterialWithTallaUpdate, MaterialWithoutTallaUpdate } from "@interfaces/materials";
 import { updateMaterialWithSize, updateMaterialWithoutSize } from "../helper/UpdateMaterial";
 
-export default function EditarMaterial () {
+interface EditarMaterialProps {
+  id: string; // Declara que el componente espera una prop `id` de tipo string
+}
+
+export default function EditarMaterial ({ id }: EditarMaterialProps) {
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [keywordInput, setkeywordInput] = useState("");
@@ -39,8 +43,9 @@ export default function EditarMaterial () {
     const [buttonColor, setButtonColor] = useState<string>("bg-gray-200");
     const [editableProduct, setEditableProduct] = useState(productoInfo);
 
-    useEffect(() => {  
-      const id = "21"; // ID de prueba
+  
+
+    useEffect(() => {
       const loadProductoInfo = async () => {
         const response = await fetchProductMaterial(id);
   
@@ -53,7 +58,7 @@ export default function EditarMaterial () {
       };
   
       loadProductoInfo();
-    }, []);
+    }, [id]);
 
     const handleRemoveGalleryImage = (url: string) => {
       setGalleryImages((prevImages) => prevImages.filter((img) => img !== url));

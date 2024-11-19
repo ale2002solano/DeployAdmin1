@@ -6,7 +6,10 @@ import BotonDespl from './BotonDespl'
 import Image from "next/legacy/image";
 
 export default function DetalleProducto({ id, nombre, precio, color, cantidad_vendida, cantidad_disp, imagen }: 
-                            { id: number; nombre: string; precio: string; color: string; cantidad_vendida: number; cantidad_disp: number; imagen: string }) {
+                            { id: number; nombre: string; precio: string; color: string; cantidad_vendida: number; cantidad_disp: number; imagen: string })
+                            
+                            {
+                                
     return (
         <div className="bg-white h-full w-full m-4 rounded-xl shadow-xl p-3 border border-gray-200">
             <div className="rounded-xl w-full h-full flex flex-col">

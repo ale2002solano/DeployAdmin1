@@ -9,8 +9,10 @@ import { ProductWithSizeUpdate, ProductWithoutSizeUpdate } from "@interfaces/pro
 import { fetchProductMaterial } from "../helper/UpdateMaterial";
 import { updateProductWithoutSize, updateProductWithSize } from "../helper/UpdateProduct";
 
-
-export default function EditarProducto () {
+interface EditarMaterialProps {
+  id: string; // Declara que el componente espera una prop `id` de tipo string
+}
+export default function EditarProducto ({ id }: EditarMaterialProps) {
 
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,8 +41,7 @@ export default function EditarProducto () {
     const [editableProduct, setEditableProduct] = useState(productoInfo);
     const [productType, setProductType] = useState<string>("");
 
-    useEffect(() => {  
-      const id = "154"; // ID de prueba
+    useEffect(() => {   // ID de prueba
       const loadProductoInfo = async () => {
         const response = await fetchProductMaterial(id);
   
@@ -53,8 +54,9 @@ export default function EditarProducto () {
       };
   
       loadProductoInfo();
-    }, []);
+    }, [id]);
 
+   
   
     const handleRemoveGalleryImage = (url: string) => {
       setGalleryImages((prevImages) => prevImages.filter((img) => img !== url));
