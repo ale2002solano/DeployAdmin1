@@ -43,7 +43,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
     const [productType, setProductType] = useState<string>("");
     const [buttonColor, setButtonColor] = useState<string>("bg-gray-200");
     const [editableProduct, setEditableProduct] = useState(productoInfo);
-  
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
       const loadProductoInfo = async () => {
@@ -148,6 +148,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
       };
 
       const handleEdit = () => {
+        setIsEditing(!isEditing); 
         setIsDisabled(false); // Al hacer clic en "Editar", habilitar los inputs
         setButtonColor(buttonColor === "bg-gray-200" ? "bg-purple-400" : "bg-gray-200");
       };
@@ -236,7 +237,9 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
 
     return (
         <div className="p-8 bg-gray-50 rounded-lg shadow-lg max-w-5xl mx-auto">
-        <h2 className="text-2xl font-koulen mb-6 text-black">Editar Materiales</h2>
+        <h2 className="text-2xl font-koulen mb-6 text-black">
+        {isEditing ? `Editar Material ${productoInfo?.nombre_prod}` : productoInfo?.nombre_prod}
+        </h2>
         <form className="grid grid-cols-1 md:grid-cols-2 gap-6" >
   
           {/* Tipo Producto Accordion */}
