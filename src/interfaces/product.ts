@@ -61,3 +61,27 @@ export interface ProductWithSize {
       categorias:string[];
     };
   }
+
+  export interface ProductWithSizeUpdate {
+    id:string;
+    productName: string;
+    description: string;
+    categories: number[];
+    mainImage: string;
+    galleryImages: string[] | null;
+    sizeQuantities: Record<string, number | null>;
+    sizePrices: Record<string, number | null>;
+    keywords: string[];
+  }
+  
+  export interface ProductWithoutSizeUpdate {
+    id:string;
+    productName: string;
+    price: number;
+    stock: number;
+    description: string;
+    categories: string[];
+    mainImage: string;
+    galleryImages: string[];
+    keywords: string[];
+  }

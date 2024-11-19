@@ -2,13 +2,13 @@ import UploadModal from "../../createProduct/components/subirFotos";
 import Image from 'next/image';
 import React,{useEffect, useState} from "react";
 import { ProductoInfo } from "@interfaces/product";
-import { fetchProductMaterial } from "../helper/getMaterial";
+import { fetchProductMaterial } from "../helper/UpdateMaterial";
 import { fetchCategoriesMaterials } from "@services/materials";
 import { categoriasMateriales } from "@interfaces/materials";
 import { MaterialWithTallaUpdate, MaterialWithoutTallaUpdate } from "@interfaces/materials";
-import { updateMaterialWithSize, updateMaterialWithoutSize } from "../helper/getMaterial";
+import { updateMaterialWithSize, updateMaterialWithoutSize } from "../helper/UpdateMaterial";
 
-export default function EditMaterial () {
+export default function EditarMaterial () {
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [keywordInput, setkeywordInput] = useState("");
