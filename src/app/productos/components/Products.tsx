@@ -10,7 +10,7 @@ export default function Products ({indexType} : {indexType : number}) {
     const [productsSplit, setProductsSplit] = useState(0);
 
     const [pageNumber, setPageNumber] = useState(1);
-    const [isLoading, setIsLoading] = useState(true);
+    
 
     const totalProducts = productos.length;
 

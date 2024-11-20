@@ -4,7 +4,7 @@ import Footer from 'components/Footer'
 import Navbar from 'components/navbar'
 import Titulo from './components/Titulo'
 import Interactions from './components/Interactions'
-import Products from '../productos/components/Products'
+
 
 export default function productos () {
     return (
