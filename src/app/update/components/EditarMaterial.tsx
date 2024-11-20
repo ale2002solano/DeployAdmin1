@@ -16,14 +16,14 @@ interface EditarMaterialProps {
 export default function EditarMaterial ({ id }: EditarMaterialProps) {
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [keywordInput, setkeywordInput] = useState("");
-    const [keywords, setkeywords] = useState<string[]>([]);
+    const [keywordInput, setKeywordInput] = useState("");
+    const [keywords, setKeywords] = useState<string[] | null>(null);
     const [productoInfo, setProductoInfo] = useState<ProductoInfo["productoInfo"] | null>(null);
     const [galleryImages, setGalleryImages] = useState<string[]>(productoInfo?.imagenes_extra || []);
     const [isGallery, setIsGallery] = useState(false);
     const [mainImage, setMainImage] = useState<string | null>(productoInfo?.imagen_principal || null);
     // Inicializar el estado de los grosores con la data de productoInfo.grosores
-    const [sizes, setSizes] = useState<Record<string, { cantidad: number, precio: number }>>({});
+    const [, setSizes] = useState<Record<string, { cantidad: number, precio: number }>>({});
     //const [editing, setEditing] = useState(true);
     // Mapeo entre los nombres que vienen del backend y los que queremos mostrar
     const sizeMap: Record<string, string> = {
@@ -116,15 +116,28 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
       const handleKeywordAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          if (keywordInput.trim() && !keywords.includes(keywordInput.trim())) {
-            setkeywords([...keywords, keywordInput.trim()]);
-            setkeywordInput("");
+          const trimmedInput = keywordInput.trim();
+          if (trimmedInput && (!keywords || !keywords.includes(trimmedInput))) {
+            setKeywords((prev) => (prev ? [...prev, trimmedInput] : [trimmedInput]));
+            setKeywordInput(""); // Limpiar el input después de agregar
           }
         }
       };
     
       const handleKeywordRemove = (keyword: string) => {
-        setkeywords((prevKeywords) => prevKeywords.filter((cat) => cat !== keyword));
+        setKeywords((prevKeywords) => {
+          const updatedKeywords = prevKeywords?.filter((k) => k !== keyword) || null;
+          setEditableProduct((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  keywords: updatedKeywords,
+                }
+              : null
+          );
+      
+          return updatedKeywords && updatedKeywords.length > 0 ? updatedKeywords : null;
+        });
       };
 
          // Actualizar el estado de sizes cuando productoInfo.grosores cambie
@@ -334,7 +347,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                   <div className="mt-4 space-y-4">
                         {allSizes.map((size) => {
                           // Comprobamos si el nombre del tamaño existe en los grosores del backend
-                          const backendSize = Object.keys(sizes).find(key => sizeMap[key] === size);
+                          const backendSize = Object.keys(sizeMap).find(key => sizeMap[key] === size);
 
                           return (
                             <div key={size} className="grid grid-cols-2 gap-4">
@@ -444,27 +457,30 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
             <div>
               <label className="block text-sm font-medium text-gray-700">Keyword</label>
               <input
-                type="text"
-                disabled={isDisabled}
-                defaultValue={keywordInput}
-                onChange={(e) => setkeywordInput(e.target.value)}
-                onKeyDown={handleKeywordAdd}
-                className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                placeholder="Escribe y presiona Enter o Espacio para agregar"
-              />
-              <div className="flex flex-wrap gap-2 mt-2">
-                {keywords.map((keywords, index) => (
-                  <span key={index} className="bg-gray-200 text-black px-2 py-1 rounded-full text-sm flex items-center">
-                    {keywords}
-                    <button
-                      type="button"
-                      onClick={() => handleKeywordRemove(keywords)}
-                      className="ml-2 text-red-500 hover:text-red-700"
+                  type="text"
+                  value={keywordInput}
+                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onKeyDown={handleKeywordAdd}
+                  disabled={isDisabled}
+                  className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
+                  placeholder="Escribe y presiona Enter o Espacio para agregar"
+                />
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {keywords?.map((keyword, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-200 text-black px-2 py-1 rounded-full text-sm flex items-center"
                     >
-                      &times;
-                    </button>
-                  </span>
-                ))}
+                      {keyword}
+                      <button
+                        type="button"
+                        onClick={() => handleKeywordRemove(keyword)}
+                        className="ml-2 text-red-500 hover:text-red-700"
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
               </div>
             </div>
           </div>

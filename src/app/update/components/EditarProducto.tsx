@@ -13,34 +13,26 @@ interface EditarMaterialProps {
   id: string; // Declara que el componente espera una prop `id` de tipo string
 }
 export default function EditarProducto ({ id }: EditarMaterialProps) {
-
-    const [isDisabled, setIsDisabled] = useState<boolean>(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [keywordInput, setkeywordInput] = useState("");
-    const [keywords, setkeywords] = useState<string[]>([]);
-    const [productoInfo, setProductoInfo] = useState<ProductoInfo["productoInfo"] | null>(null);
-    const [galleryImages, setGalleryImages] = useState<string[]>(productoInfo?.imagenes_extra || []);
-    const [isGallery, setIsGallery] = useState(false);
-    const [mainImage, setMainImage] = useState<string | null>(productoInfo?.imagen_principal || null);
-    // Inicializar el estado de los grosores con la data de productoInfo.grosores
-    const [, setSizes] = useState<Record<string, { cantidad: number, precio: number }>>({});
-    // Mapeo entre los nombres que vienen del backend y los que queremos mostrar
-    const sizeMap: Record<string, string> = {
-      "XL": "XL",
-      "L": "L",
-      "M": "M",
-      "S": "S",
-      "XS": "XS",
-    };
-    const allSizes = ["XL", "L", "M", "S", "XS"];
-    const [productCategories, setProductCategories] = useState<Category[]>([]);
-    const [selectedCategoryNames, setSelectedCategoryNames] = useState<string[]>([]);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);      
-    const [buttonColor, setButtonColor] = useState<string>("bg-gray-200");
-    const [editableProduct, setEditableProduct] = useState(productoInfo);
-    const [productType, setProductType] = useState<string>("");
-    const [isEditing, setIsEditing] = useState(false);
+    
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [keywordInput, setKeywordInput] = useState("");
+  const [keywords, setKeywords] = useState<string[] | null>(null);
+  const [productoInfo, setProductoInfo] = useState<ProductoInfo["productoInfo"] | null>(null);
+  const [galleryImages, setGalleryImages] = useState<string[]>(productoInfo?.imagenes_extra || []);
+  const [isGallery, setIsGallery] = useState(false);
+  const [mainImage, setMainImage] = useState<string | null>(productoInfo?.imagen_principal || null);
+  const [, setSizes] = useState<Record<string, { cantidad: number; precio: number }>>({});
+  const sizeMap: Record<string, string> = { XL: "XL", L: "L", M: "M", S: "S", XS: "XS" };
+  const allSizes = ["XL", "L", "M", "S", "XS"];
+  const [productCategories, setProductCategories] = useState<Category[]>([]);
+  const [selectedCategoryNames, setSelectedCategoryNames] = useState<string[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [buttonColor, setButtonColor] = useState<string>("bg-gray-200");
+  const [editableProduct, setEditableProduct] = useState(productoInfo);
+  const [productType, setProductType] = useState<string>("");
+  const [isEditing, setIsEditing] = useState(false);
     useEffect(() => {   // ID de prueba
       const loadProductoInfo = async () => {
         const response = await fetchProductMaterial(id);
@@ -61,6 +53,16 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
     const handleRemoveGalleryImage = (url: string) => {
       setGalleryImages((prevImages) => prevImages.filter((img) => img !== url));
     };
+
+      // Sincronizar las palabras clave iniciales desde editableProduct
+      useEffect(() => {
+        if (editableProduct?.keywords) {
+          setKeywords(editableProduct.keywords);
+        } else {
+          setKeywords(null);
+        }
+      }, [editableProduct]);
+    
 
   
     useEffect(() => {
@@ -116,16 +118,33 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
       const handleKeywordAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          if (keywordInput.trim() && !keywords.includes(keywordInput.trim())) {
-            setkeywords([...keywords, keywordInput.trim()]);
-            setkeywordInput("");
+          const trimmedInput = keywordInput.trim();
+          if (trimmedInput && (!keywords || !keywords.includes(trimmedInput))) {
+            setKeywords((prev) => (prev ? [...prev, trimmedInput] : [trimmedInput]));
+            setKeywordInput(""); // Limpiar el input después de agregar
           }
         }
       };
     
+    
       const handleKeywordRemove = (keyword: string) => {
-        setkeywords((prevKeywords) => prevKeywords.filter((cat) => cat !== keyword));
+        setKeywords((prevKeywords) => {
+          const updatedKeywords = prevKeywords?.filter((k) => k !== keyword) || null;
+          setEditableProduct((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  keywords: updatedKeywords,
+                }
+              : null
+          );
+      
+          return updatedKeywords && updatedKeywords.length > 0 ? updatedKeywords : null;
+        });
       };
+      
+      
+    
 
          // Actualizar el estado de sizes cuando productoInfo.grosores cambie
           useEffect(() => {
@@ -266,7 +285,9 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
             }
           }
         };
-   
+
+        
+        
     return (
         <div className="p-8 bg-gray-50 rounded-lg shadow-lg max-w-5xl mx-auto">
         <h2 className="text-2xl font-koulen mb-6 text-black">
@@ -488,29 +509,31 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
             <div>
               <label className="block text-sm font-medium text-gray-700">Keyword</label>
               <input
-                type="text"
-                disabled={isDisabled}
-                value={keywordInput}
-                onChange={(e) => setkeywordInput(e.target.value)}
-                onKeyDown={handleKeywordAdd}
-                className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
-                placeholder="Escribe y presiona Enter o Espacio para agregar"
-              />
-              <div className="flex flex-wrap gap-2 mt-2">
-                {keywords.map((keywords, index) => (
-                  <span key={index} className="bg-gray-200 text-black px-2 py-1 rounded-full text-sm flex items-center">
-                    {keywords}
-                    <button
-                      disabled={isDisabled}
-                      type="button"
-                      onClick={() => handleKeywordRemove(keywords)}
-                      className="ml-2 text-red-500 hover:text-red-700"
+                  type="text"
+                  value={keywordInput}
+                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onKeyDown={handleKeywordAdd}
+                  disabled={isDisabled}
+                  className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
+                  placeholder="Escribe y presiona Enter o Espacio para agregar"
+                />
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {keywords?.map((keyword, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-200 text-black px-2 py-1 rounded-full text-sm flex items-center"
                     >
-                      &times;
-                    </button>
-                  </span>
-                ))}
-              </div>
+                      {keyword}
+                      <button
+                        type="button"
+                        onClick={() => handleKeywordRemove(keyword)}
+                        className="ml-2 text-red-500 hover:text-red-700"
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
+                </div>
             </div>
           </div>
   

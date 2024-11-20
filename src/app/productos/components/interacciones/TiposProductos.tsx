@@ -3,15 +3,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState, useEffect, useRef } from 'react';
-import { getProductosPorTipo } from '@services/product';
-import { InfoProductos } from '@interfaces/product';
-import Products from '../Products';
 
 export default function TiposProductos () {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const [idTypeProduct, setIdTypeProduct] = useState(0);
-    const [products, setProducts] = useState<InfoProductos[]>([]);
+    
 
     const handleIdTypeProduct = (index: number) => {
         setIdTypeProduct(index);
