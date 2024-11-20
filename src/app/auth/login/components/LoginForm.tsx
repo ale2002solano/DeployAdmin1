@@ -15,9 +15,9 @@ export default function LoginForm () {
         contrasena: "",
     });
 
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
     const [codigo, setCodigo] = useState(0);
-    const [message, setMessage] = useState("");
+    const [, setMessage] = useState("");
     const [correoError, setCorreoError] = useState("");
     const [contrasenaError, setContrasenaError] = useState("");
 
@@ -34,7 +34,6 @@ export default function LoginForm () {
     //Envío del formulario
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Datos enviados:", formData);
         setLoading(true);
         setCorreoError("");
         setContrasenaError("");
@@ -42,12 +41,11 @@ export default function LoginForm () {
         // Realiza una petición POST con los datos del formulario
         const response = await login(formData);
         setMessage(response.mensaje);
-        console.log("Respuesta:", response);
 
         if (response.admin.codigo == 1) {
             console.log("Login exitoso:", response);
             // Guarda el objeto 'response' en el localStorage
-            localStorage.setItem('loginResponse', JSON.stringify(response));
+            localStorage.setItem('usuario', JSON.stringify(response));
             setCodigo(1);
             router.push("http://localhost:3000/");
         } else if (response.admin.codigo == 2) {
