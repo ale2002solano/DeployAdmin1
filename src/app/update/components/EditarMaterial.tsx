@@ -286,7 +286,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                             type="number"
                             name="precio_venta"
                             required
-                            defaultValue={editableProduct?.precio_venta}
+                            value={editableProduct?.precio_venta}
                             onChange={handleInputChange}
                             disabled={isDisabled}
                             className="mt-2 p-2 text-black border border-gray-300 rounded-lg w-full"
@@ -302,7 +302,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                             name="cantidad_disp"
                             required
                             disabled={isDisabled}
-                            defaultValue={productoInfo?.cantidad_disp}
+                            value={editableProduct?.cantidad_disp}
                             onChange={handleInputChange}
                             className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
                             placeholder="Cantidad disponible"
