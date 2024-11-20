@@ -5,7 +5,6 @@ import Navbar from 'components/navbar'
 import Titulo from './components/Titulo'
 import Interactions from './components/Interactions'
 
-
 export default function productos () {
     return (
         <div className="flex h-screen w-full flex-col bg-slate-50 overflow-hidden ">

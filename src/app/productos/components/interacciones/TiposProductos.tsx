@@ -8,7 +8,6 @@ export default function TiposProductos () {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const [idTypeProduct, setIdTypeProduct] = useState(0);
-    
 
     const handleIdTypeProduct = (index: number) => {
         setIdTypeProduct(index);
