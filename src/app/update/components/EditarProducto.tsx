@@ -213,8 +213,12 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
         };
       
         const handleUpdate = async () => {
-       
+          if (!mainImage) {
+            alert("Debes cargar una imagen principal antes de continuar.");
+            return; // Detén la ejecución si no hay imagen
+          }
           if (!editableProduct) return;
+          
       
           const selectedCategoryIds = selectedCategoryNames.map((name) => {
             const category = productCategories.find((cat) => cat.CATEGORIA === name);
@@ -245,9 +249,10 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
             };
             console.log("Objeto que se envía para Producto con medidas:", productData);
             const success = await updateProductWithSize(editableProduct.id_producto, productData);
-            window.location.reload();
+            
             if (success) {
               console.log("Producto con medidas actualizado correctamente.");
+              window.location.reload();
             } else {
               console.error("Error actualizando producto con medidas.");
             }
@@ -260,15 +265,15 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
               price: editableProduct.precio_venta,
               stock: editableProduct.cantidad_disp,
               mainImage: mainImage || "",
-              galleryImages: galleryImages,
+              galleryImages: galleryImages.length > 0 ? galleryImages : null,
               keywords: keywords,
             };
             console.log("Objeto que se envía para Producto sin medidas:", productData);
       
             const success = await updateProductWithoutSize(editableProduct.id_producto, productData);
-            window.location.reload();
+            
             if (success) {
-              
+              window.location.reload();
             } else {
               console.error("Error actualizando producto sin medidas.");
             }
@@ -517,6 +522,7 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
                         type="button"
                         onClick={() => handleKeywordRemove(keyword)}
                         className="ml-2 text-red-500 hover:text-red-700"
+                        
                       >
                         &times;
                       </button>
@@ -593,7 +599,12 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
 
             <button
                 type="button" // Change to "button" to avoid implicit form submission
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-purple-400"
+                disabled={!mainImage}
+              className={`px-4 py-2 rounded-lg ${
+                mainImage
+                  ? "bg-gray-200 text-gray-700 rounded-lg hover:bg-purple-400"
+                  : "bg-gray-400 text-gray-700 cursor-not-allowed"
+              }`}
                 onClick={handleUpdate} 
               >
                 Actualizar

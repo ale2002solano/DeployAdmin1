@@ -20,7 +20,7 @@ export interface ProductWithSize {
     description: string;
     categories: string[];
     mainImage: string;
-    galleryImages: string[];
+    galleryImages: string[] | null;
     keywords: string[];
   }
 
@@ -35,7 +35,7 @@ export interface ProductWithSize {
     tallas: string | null;
     grosores: Record<string, { cantidad: number; precio: number }>;
     imagen_principal: string;
-    imagenes_extra: string[];
+    imagenes_extra: string[] | null;
     nombre_marca: string;
   }
 
@@ -56,7 +56,7 @@ export interface ProductWithSize {
       tallas: Record<string, { cantidad: number; precio: number }>;
       grosores: Record<string, { cantidad: number; precio: number }>;
       imagen_principal: string;
-      imagenes_extra: string[];
+      imagenes_extra: string[] | null;
       nombre_marca: string;
       categorias:string[];
       keywords: string[] | null;
@@ -83,7 +83,7 @@ export interface ProductWithSize {
     description: string;
     categories: string[];
     mainImage: string;
-    galleryImages: string[];
+    galleryImages: string[] | null;
     keywords: string[] | null;
   }
 export interface InfoProductos{

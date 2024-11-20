@@ -149,7 +149,7 @@ const ProductForm: React.FC = () => {
           description,
           categories: selectedCategoryIds.map((id) => id.toString()),
           mainImage: mainImage || "",
-          galleryImages,
+          galleryImages:galleryImages.length > 0 ? galleryImages : null,
           keywords,
         };
         console.log("Enviando producto sin talla:", newProduct);
@@ -166,9 +166,14 @@ const ProductForm: React.FC = () => {
   };
 
   const handleCreateProduct = () => {
+    if (!mainImage) {
+      alert("Debes cargar una imagen principal antes de continuar.");
+      return; // Detén la ejecución si no hay imagen
+    }
+  
     console.log("Create button clicked, setting isCreatingProduct to true");
     setIsCreatingProduct(true);
-    formRef.current?.requestSubmit(); // Programmatically trigger form submission
+    formRef.current?.requestSubmit(); // Envía el formulario si pasa la validación
   };
 
   const resetForm = () => {
@@ -370,7 +375,9 @@ const ProductForm: React.FC = () => {
                 <Image src={mainImage} alt="Main Preview" width={250} height={250} className="mx-auto" style={{ width: 'auto', height: 'auto' }}/>
               ) : (
                 <p>Click para cargar imagen principal</p>
+                
               )}
+            
             </div>
           </div>
 
@@ -421,9 +428,15 @@ const ProductForm: React.FC = () => {
             Cancelar
           </button>
           <button
-              type="button" // Change to "button" to avoid implicit form submission
-              className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
-              onClick={handleCreateProduct} // Explicitly triggers product creation
+              type="button"
+              disabled={!mainImage}
+              className={`px-4 py-2 rounded-lg ${
+                mainImage
+                  ? "bg-black text-white hover:bg-gray-800"
+                  : "bg-gray-400 text-gray-700 cursor-not-allowed"
+              }`}
+              onClick={handleCreateProduct}
+               // Deshabilita el botón si no hay imagen
             >
               Crear
             </button>

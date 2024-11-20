@@ -112,6 +112,16 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
         }
         handleCloseModal();
       };
+      
+
+      // Sincronizar las palabras clave iniciales desde editableProduct
+      useEffect(() => {
+        if (editableProduct?.keywords) {
+          setKeywords(editableProduct.keywords);
+        } else {
+          setKeywords(null);
+        }
+      }, [editableProduct]);
 
       const handleKeywordAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -123,7 +133,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
           }
         }
       };
-    
+      
       const handleKeywordRemove = (keyword: string) => {
         setKeywords((prevKeywords) => {
           const updatedKeywords = prevKeywords?.filter((k) => k !== keyword) || null;
@@ -180,6 +190,10 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
       }, [productoInfo]);
       
       const handleUpdate = async () => {
+        if (!mainImage) {
+          alert("Debes cargar una imagen principal antes de continuar.");
+          return; // Detén la ejecución si no hay imagen
+        }
         if (!editableProduct) return;
         
         if (productType === "Material con grosores") {
@@ -223,7 +237,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
             price: editableProduct.precio_venta,
             stock: editableProduct.cantidad_disp,
             mainImage: mainImage || "",
-            galleryImages: galleryImages,
+            galleryImages: galleryImages.length > 0 ? galleryImages : null,
             keywords: keywords,
             marca:editableProduct.nombre_marca,
           };
@@ -467,6 +481,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                         type="button"
                         onClick={() => handleKeywordRemove(keyword)}
                         className="ml-2 text-red-500 hover:text-red-700"
+                        
                       >
                         &times;
                       </button>
@@ -540,13 +555,18 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
               >
                 Editar
               </button>
-            <button
-              type="button"
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-purple-400"
-              onClick={handleUpdate}
-            >
-              Actualizar
-            </button>
+              <button
+                type="button" // Change to "button" to avoid implicit form submission
+                disabled={!mainImage}
+              className={`px-4 py-2 rounded-lg ${
+                mainImage
+                  ? "bg-gray-200 text-gray-700 rounded-lg hover:bg-purple-400"
+                  : "bg-gray-400 text-gray-700 cursor-not-allowed"
+              }`}
+                onClick={handleUpdate} 
+              >
+                Actualizar
+              </button>
             <button
                 type="button" // Change to "button" to avoid implicit form submission
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-purple-400"
