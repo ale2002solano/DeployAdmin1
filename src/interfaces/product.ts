@@ -59,7 +59,7 @@ export interface ProductWithSize {
       imagenes_extra: string[];
       nombre_marca: string;
       categorias:string[];
-      keywords: string[];
+      keywords: string[] | null;
     };
   }
 
@@ -72,7 +72,7 @@ export interface ProductWithSize {
     galleryImages: string[] | null;
     sizeQuantities: Record<string, number | null>;
     sizePrices: Record<string, number | null>;
-    keywords: string[];
+    keywords: string[] | null;
   }
   
   export interface ProductWithoutSizeUpdate {
@@ -84,7 +84,7 @@ export interface ProductWithSize {
     categories: string[];
     mainImage: string;
     galleryImages: string[];
-    keywords: string[];
+    keywords: string[] | null;
   }
 export interface InfoProductos{
     id_producto: number;
@@ -94,5 +94,5 @@ export interface InfoProductos{
     cantidad_vendida: number;
     cantidad_disp: number;
     url_imagen: string;
-    id_estado_fact: number;
+    id_estado_fact: number | null;
 }

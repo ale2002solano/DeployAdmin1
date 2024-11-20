@@ -9,9 +9,10 @@ export interface MaterialWithoutTalla {
     stock: number | null; // Puede ser null si no se proporciona
     mainImage: string | null;
     galleryImages: string[] | null;
-    keywords: string[];
+    keywords: string[] | null;
     categoryId: number | null; // Puede ser null si no se selecciona una categoría
     marca: string;
+    
   }
 
   export interface MaterialWithTalla {
@@ -21,7 +22,7 @@ export interface MaterialWithoutTalla {
     sizeQuantities: Record<string, number | null>; // Cantidades por grosor
     mainImage: string | null;
     galleryImages: string[] | null;
-    keywords: string[];
+    keywords: string[] | null;
     categoryId: number; // ID de la categoría siempre debe estar definido
     marca: string;
   }
@@ -34,7 +35,7 @@ export interface MaterialWithoutTalla {
     stock: number | null; // Puede ser null si no se proporciona
     mainImage: string | null;
     galleryImages: string[] | null;
-    keywords: string[];
+    keywords: string[] | null;
     categoryId: number | null; // Puede ser null si no se selecciona una categoría
     marca: string;
   }
@@ -47,7 +48,7 @@ export interface MaterialWithoutTalla {
     sizeQuantities: Record<string, number | null>; // Cantidades por grosor
     mainImage: string | null;
     galleryImages: string[] | null;
-    keywords: string[];
+    keywords: string[] | null;
     categoryId: number; // ID de la categoría siempre debe estar definido
     marca: string;
   }
@@ -66,6 +67,7 @@ export interface MaterialWithoutTalla {
       imagenes_extra: string[];
       nombre_marca: string;
       categorias:string[];
+      keywords: string[] | null;
     };
   }
   

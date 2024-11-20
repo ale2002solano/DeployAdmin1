@@ -2,13 +2,10 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
+
 
 export default function Password () {
-    const [passwordEyeController, setPasswordEyeController] = useState(false);
-    const passwordEyeHandler = () => {
-        setPasswordEyeController(!passwordEyeController);
-    };
+
 
 
     return(
