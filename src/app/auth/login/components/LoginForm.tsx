@@ -15,9 +15,9 @@ export default function LoginForm () {
         contrasena: "",
     });
 
-    //const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
     const [codigo, setCodigo] = useState(0);
-    const [message, setMessage] = useState("");
+    const [, setMessage] = useState("");
     const [correoError, setCorreoError] = useState("");
     const [contrasenaError, setContrasenaError] = useState("");
 

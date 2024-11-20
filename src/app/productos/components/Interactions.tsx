@@ -3,7 +3,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState, useEffect, useRef } from 'react';
-import { InfoProductos } from '@interfaces/product';
 import SearchBar from './interacciones/SearchBar'
 import Boton from './interacciones/Boton'
 import Products from './Products';
