@@ -59,6 +59,7 @@ export interface ProductWithSize {
       imagenes_extra: string[];
       nombre_marca: string;
       categorias:string[];
+      keywords: string[];
     };
   }
 
