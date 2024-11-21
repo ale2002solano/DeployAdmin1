@@ -17,7 +17,7 @@ export default function Details() {
               <Headerbar />
             </header>
     
-            <section className="flex-1 overflow-y-auto pt-[11%] pl-[20%]">
+            <section className="flex-1 overflow-y-auto mt-[0%] ml-[16.4%]">
               <DetailsOrdenForm />
             </section>
           </div>

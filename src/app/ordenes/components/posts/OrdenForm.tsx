@@ -45,11 +45,26 @@ export default function Dashboard() {
     }
   };
 
-  // Obtener el rango de fechas
+  const parseFecha = (fecha: string): Date => {
+    const partes = fecha.split(/[-/]/);
+  
+    if (partes[0].length === 4) {
+      // Formato YYYY-MM-DD
+      return new Date(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2]));
+    } else {
+      // Asumimos formato DD/MM/YYYY
+      return new Date(Number(partes[2]), Number(partes[1]) - 1, Number(partes[0]));
+    }
+  };
+  
   const obtenerRangoDeFechas = (ordenes: Orden[]) => {
-    const fechas = ordenes.map((orden) => new Date(orden.fecha_fact).getTime());
+    const fechas = ordenes.map((orden) => parseFecha(orden.fecha_fact).getTime());
+  
+    if (fechas.length === 0) return;
+  
     const fechaMin = new Date(Math.min(...fechas));
     const fechaMax = new Date(Math.max(...fechas));
+  
     const opciones = { year: "numeric", month: "short", day: "numeric" } as const;
     setFechaInicio(fechaMin.toLocaleDateString("en-US", opciones));
     setFechaFin(fechaMax.toLocaleDateString("en-US", opciones));
