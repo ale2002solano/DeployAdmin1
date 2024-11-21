@@ -57,29 +57,17 @@ export default function DetailsOrdenForm(){
   </div>
 
   <div className="w-full bg-white rounded-md p-5 flex flex-col h-auto overflow-auto text-gray-950 mt-3">
-    <header className="flex justify-center">Productos</header>
+    <header className="flex justify-center border-b">Productos</header>
     <table>
         <thead>
             <tr>
-                <th className="border-solid border-2 p-3">Nombre producto</th>
-                <th className="border-solid border-2 p-3">Orden ID</th>
-                <th className="border-solid border-2 p-3">Precio</th>
-                <th className="border-solid border-2 p-3">Subtotal</th>
+                <th className="border-b p-3">Nombre producto</th>
+                <th className="border-b p-3">Orden ID</th>
+                <th className="border-b p-3">Cantidad</th>
+                <th className="border-b p-3">Total</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td className="border-solid border-2 p-3">Producto 1</td>
-                <td className="border-solid border-2 p-3">1</td>
-                <td className="border-solid border-2 p-3">$100</td>
-                <td className="border-solid border-2 p-3">$100</td>
-            </tr>
-            <tr>
-                <td className="border-solid border-2 p-3">Producto 2</td>
-                <td className="border-solid border-2 p-3">2</td>
-                <td className="border-solid border-2 p-3">$200</td>
-                <td className="border-solid border-2 p-3">$400</td>
-            </tr>
         </tbody>
     </table>
   </div>
