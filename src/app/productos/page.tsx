@@ -1,27 +1,30 @@
 'use client'
 
-import Footer from 'components/Footer'
+
 import Navbar from 'components/navbar'
+import SideBar from 'components/Sidebar'
 import Titulo from './components/Titulo'
 import Interactions from './components/Interactions'
 
 export default function productos () {
     return (
         <div className="flex h-screen w-full flex-col bg-slate-50 overflow-hidden ">
-            <div><Navbar/></div>
+            <div className="h-[12%] w-full">
+                <Navbar/>
+            </div>
             
-            <div className='flex pt-[5%] h-[85%] '>
-                <div  className="w-[15%] h-full bg-[#ffffff] shadow-xl" ></div>
+            <div className='flex h-[88%] w-full'>
+                <div  className="w-[22%] h-full" >
+                    <SideBar/>
+                </div>
                 
-                <div className=" z-2 w-full h-full bg-[#COCOCO]">
-                    <div className="h-[8%]">
+                <div className="h-full z-2 w-full bg-[#COCOCO]">
+                    <div className="h-[8%] w-full">
                         <Titulo/></div>
-                    <div className="h-[92%]">
+                    <div className="h-[85%] w-full">
                         <Interactions/></div>
                     </div>
             </div>
-            <div><Footer /></div>
         </div>
     )
 }
-
