@@ -6,24 +6,22 @@ import OrdenForm from "../components/posts/OrdenForm";
 
 export default function Dash() {
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
-      {/* Sidebar con un ancho fijo */}
-      <aside className="w-[250px] md:w-[300px] h-full fixed top-0 left-0 z-20">
-        <Sidebar />
-      </aside>
-
-      {/* Contenido principal, asegurando que no se solape con el sidebar */}
-      <main className="flex h-screen w-full bg-gray-200 pl-[250px] md:pl-[300px]">
-        <div className="flex flex-col flex-1 h-full">
-          <header className="h-[10%] bg-gray-100 relative z-0">
-            <Headerbar />
-          </header>
-
-          <section className="flex-1 overflow-y-auto">
-            <OrdenForm />
-          </section>
-        </div>
-      </main>
-    </div>
+    <main className="flex h-screen w-full bg-gray-200 overflow-hidden">
+          
+          <aside className="w-[250px] md:w-[300px] h-full fixed top-0 left-0 z-20">
+            <Sidebar />
+          </aside>
+    
+          <div className="flex flex-col flex-1 h-full relative">
+    
+            <header className="h-[10%] bg-gray-100 relative z-0">
+              <Headerbar />
+            </header>
+    
+            <section className="flex-1 overflow-y-auto mt-[0%] ml-[16.4%]">
+              <OrdenForm />
+            </section>
+          </div>
+        </main>
   );
 }
