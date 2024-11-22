@@ -32,6 +32,10 @@ interface Producto {
     color: string;
 }
 
+interface EstadoFactura {
+    ID_ESTADO_FACT: number;
+    ESTADO_FACT: string;
+}
 interface DetalleOrden {
     cliente: DetalleOrdenCliente;
     productos: Producto[];
@@ -39,7 +43,8 @@ interface DetalleOrden {
 export default function DetailsOrdenForm() {
     const [detalleOrden, setDetalleOrden] = useState<DetalleOrden | null>(null);
     const [ordenId, setOrdenId] = useState<string | null>(null);
-
+    const [estados, setEstados] = useState<EstadoFactura[]>([]);
+    const [selectedEstado, setSelectedEstado] = useState("");
     
 
     useEffect(() => {
@@ -83,17 +88,88 @@ export default function DetailsOrdenForm() {
         }
     }, [ordenId]);
 
-    useEffect(() => {
-        if (ordenId) {
-            fetchDetalleOrden();  // Llamamos a la función fetchDetalleOrden
-        }
-    }, [ordenId, fetchDetalleOrden]);
-
-    if (!detalleOrden || !ordenId) {
-        return <div>Cargando...</div>;
+   // Llamar a `fetchDetalleOrden` cuando `ordenId` cambie
+   useEffect(() => {
+    if (ordenId) {
+        fetchDetalleOrden();
     }
+}, [ordenId, fetchDetalleOrden]);
+
+// Obtener los estados
+useEffect(() => {
+    const fetchEstados = async () => {
+        try {
+            const response = await fetch("https://deploybackenddiancrochet.onrender.com/admin/factura/estados");
+            if (!response.ok) throw new Error("Error al obtener los estados");
+            const data = await response.json();
+            setEstados(data.Estados || []);
+        } catch (error) {
+            console.error("Error al obtener los estados:", error);
+        }
+    };
+
+    fetchEstados();
+}, []);
+
+ // Manejar el cambio de estado
+ const statusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const nuevoEstado = e.target.value;
+    setSelectedEstado(nuevoEstado);
+
+    if (!ordenId) {
+        console.error("ID de la orden no está disponible");
+        return;
+    }
+
+    try {
+        const estadoSeleccionado = estados.find((estado) => estado.ESTADO_FACT === nuevoEstado);
+        if (!estadoSeleccionado) {
+            console.error("No se encontró el estado seleccionado");
+            return;
+        }
+
+        const response = await fetch(`https://deploybackenddiancrochet.onrender.com/admin/update/estado/${ordenId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ IdNuevoEstado: estadoSeleccionado.ID_ESTADO_FACT }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al actualizar el estado de la orden");
+        }
+
+        const data = await response.json();
+        console.log("Respuesta del servidor:", data);
+
+        // Actualizar la UI con los nuevos datos si el backend retorna algo útil
+        if (data.UpdatedOrden) {
+            setDetalleOrden((prevOrden) => {
+                if (!prevOrden) return null;
+
+                return {
+                    ...prevOrden,
+                    cliente: {
+                        ...prevOrden.cliente,
+                        estado_fact: data.UpdatedOrden.estado_factura,
+                        color: data.UpdatedOrden.color,
+                    },
+                };
+            });
+        }
+    } catch (error) {
+        console.error("Error al actualizar el estado:", error);
+    }
+};
+
+if (!detalleOrden || !ordenId) {
+    return <div>Cargando...</div>;
+}
+
+    
     return (
-        <div id="Primary" className="flex flex-col justify-start items-start w-full h-full overflow-auto p-5">
+        <div id="Primary" className="flex flex-col justify-start items-start w-full h-full  p-5">
   {/* Encabezado */}
   <div id="header" className="text-gray-950 mb-5 w-full">
     <h1 className="font-rubik text-3xl font-semibold mb-3">Detalles orden</h1>
@@ -103,20 +179,21 @@ export default function DetailsOrdenForm() {
   </div>
 
   {/* Contenedor de órdenes */}
-  <div className="w-full bg-white rounded-md p-5 flex flex-col h-auto overflow-auto text-gray-950">
+  <div className="w-full bg-white rounded-md p-5 flex flex-col h-full text-gray-950">
         <div>
             <header>
                 <h1 className="flex items-center font-rubik font-semibold text-xl text-gray-700">Orden ID: #{ordenId} <div className="ml-2 border-solid border-2 p-2 rounded-md font-opensans font-light text-sm" style={{ backgroundColor: detalleOrden.cliente.color }}>{detalleOrden.cliente.estado_fact}</div></h1>
                 <div className="flex flex-row flex-nowrap justify-between items-stretch content-stretch">
                     <h1 className="flex items-center"><IoCalendarOutline className="mr-2 text-xl" /><div>{detalleOrden.cliente.fecha_transaccion}</div></h1>
                     <div className="flex items-center">
-                        <select name="status" id="" className="rounded-md border-none bg-gray-100">
-                            <option value="">cambiar estado</option>
-                            <option value="pendiente">Enviado</option>
-                            <option value="cancelado">Cancelado</option>
-                            <option value="pagado">Pagado</option>
-                            <option value="finalizada">Finalizada</option>
-                        </select>
+                    <select name="status" id="status" className="rounded-md border-none bg-gray-100" value={selectedEstado} onChange={statusChange}>
+                        <option value="">Cambiar estado</option>
+                        {estados.map((estado) => (
+                            <option key={estado.ID_ESTADO_FACT} value={estado.ESTADO_FACT}>
+                                {estado.ESTADO_FACT}
+                            </option>
+                        ))}
+                    </select>
                         <button className="border-splid border-2 py-3 px-10 ml-5 text-xl border-none bg-gray-100 rounded-md"><IoPrintOutline /></button>
                     </div>
                 </div>
@@ -146,7 +223,7 @@ export default function DetailsOrdenForm() {
         </div>
   </div>
 
-  <div className="w-full bg-white rounded-md p-5 flex flex-col h-auto overflow-auto text-gray-950 mt-3">
+  <div className="w-full bg-white rounded-md p-5 flex flex-col h-full text-gray-950 mt-3">
     <header className="flex justify-center border-b">Productos</header>
     <table>
         <thead className="text-left">
@@ -161,7 +238,7 @@ export default function DetailsOrdenForm() {
              {detalleOrden.productos.map((producto, index) => (
                  <tr key={index}>
                      <td className="border-b p-3">{producto.nombre_prod}</td>
-                     <td className="border-b p-3">{ordenId}</td>
+                     <td className="border-b p-3">{detalleOrden.cliente.id_orden_paypal}</td>
                      <td className="border-b p-3">{producto.cantidad_productos}</td>
                      <td className="border-b p-3">L.{producto.total_productos}</td>
                  </tr>
@@ -169,6 +246,35 @@ export default function DetailsOrdenForm() {
          </tbody>
 
     </table>
+    
+    <div className="flex justify-end">
+    <table className="table-auto">
+        <tbody>
+            <tr>
+                <td className="text-gray-700 font-semibold w-3/4 text-left">Subtotal:</td>
+                <td className="text-gray-900 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.subtotal, 0)}</td>
+            </tr>
+            <tr>
+                <td className="text-gray-700 font-semibold text-left">ISV (20%):</td>
+                <td className="text-gray-900 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.impuesto, 0)}</td>
+            </tr>
+            <tr>
+                <td className="text-gray-700 font-semibold text-left">Descuento:</td>
+                <td className="text-gray-900 text-right">L.0</td>
+            </tr>
+            <tr>
+                <td className="text-gray-700 font-semibold text-left">Envio:</td>
+                <td className="text-gray-900 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.precio_envio, 0)}</td>
+            </tr>
+            <tr className="border-t">
+                <td className="text-gray-700 font-semibold text-left text-lg pt-3">Total:</td>
+                <td className="text-gray-900 text-lg font-bold pt-3 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.total, 0)}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
   </div>
 </div>
     );
