@@ -1,18 +1,19 @@
 "use client";
 
-import Sidebar from "../../../components/sidebar";
+import Sidebar from "../../../components/Sidebar";
 import Headerbar from "../../../components/HeaderAdmin";
 import OrdenForm from "../components/posts/OrdenForm";
 
 export default function Dash() {
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-      {/* Sidebar con un ancho fijo para mayor control */}
-      <aside className="w-[250px] md:w-[300px] h-full bg-black fixed z-10">
+      {/* Sidebar con un ancho fijo */}
+      <aside className="w-[250px] md:w-[300px] h-full fixed top-0 left-0 z-20">
         <Sidebar />
       </aside>
 
-      <main className="flex h-screen w-full bg-gray-200 ml-[250px] md:ml-[300px]">
+      {/* Contenido principal, asegurando que no se solape con el sidebar */}
+      <main className="flex h-screen w-full bg-gray-200 pl-[250px] md:pl-[300px]">
         <div className="flex flex-col flex-1 h-full">
           <header className="h-[10%] bg-gray-100 relative z-0">
             <Headerbar />

@@ -1,5 +1,5 @@
 "use client";
-import Sidebar from "../../../components/sidebar";
+import Sidebar from "../../../components/Sidebar";
 import Headerbar from "../../../components/HeaderAdmin";
 import DetailsOrdenForm from "../components/posts/DetailsOrdenForm";
 
@@ -7,7 +7,7 @@ export default function Details() {
     return (
         <main className="flex h-screen w-full bg-gray-200 overflow-hidden">
           
-          <aside className="w-auto h-full bg-black relative z-10">
+          <aside className="w-[250px] md:w-[300px] h-full fixed top-0 left-0 z-20">
             <Sidebar />
           </aside>
     

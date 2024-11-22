@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { IoPrintOutline } from "react-icons/io5";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaCcPaypal } from "react-icons/fa";
-import jsPDF from "jspdf";
 
 // Definición de la interfaz para los datos de la orden
 interface DetalleOrdenCliente {
@@ -46,7 +45,6 @@ export default function DetailsOrdenForm() {
     const [ordenId, setOrdenId] = useState<string | null>(null);
     const [estados, setEstados] = useState<EstadoFactura[]>([]);
     const [selectedEstado, setSelectedEstado] = useState("");
-    
 
 
     useEffect(() => {
@@ -165,70 +163,6 @@ useEffect(() => {
     }
 };
 
-
-const generatePDF = () => {
-    const doc = new jsPDF();
-
-    // Verificar que `detalleOrden` y `detalleOrden.productos` están definidos
-    if (!detalleOrden || !detalleOrden.productos || detalleOrden.productos.length === 0) {
-        console.error("No hay productos disponibles para generar el PDF");
-        return;
-    }
-
-    // Agregar detalles de cliente
-    doc.setFontSize(12);
-    doc.text(`Cliente: ${detalleOrden?.cliente.nombre}`, 10, 10);
-    doc.text(`Correo: ${detalleOrden?.cliente.correo}`, 10, 15);
-    doc.text(`Teléfono: ${detalleOrden?.cliente.telefono}`, 10, 20);
-    doc.text(`Dirección: ${detalleOrden?.cliente.direccion_factura}`, 10, 25);
-    doc.text(`Ciudad: ${detalleOrden?.cliente.ciudad || 'N/A'}`, 10, 30);
-    doc.text(`Departamento: ${detalleOrden?.cliente.departamento || 'N/A'}`, 10, 35);
-    doc.text(`Estado de la Factura: ${detalleOrden?.cliente.estado_fact}`, 10, 40);
-    doc.text(`ID Orden PayPal: ${detalleOrden?.cliente.id_orden_paypal || 'N/A'}`, 10, 45);
-    doc.text(`Estado de Transacción: ${detalleOrden?.cliente.estado_transaccion || 'N/A'}`, 10, 50);
-    doc.text(`Fecha de Transacción: ${detalleOrden?.cliente.fecha_transaccion || 'N/A'}`, 10, 55);
-
-    doc.addPage(); // Nueva página para los productos
-
-    // Agregar título para los productos
-    doc.setFontSize(14);
-    doc.text("Productos", 10, 10);
-    
-    // Manualmente agregar tabla de productos
-    let yOffset = 20;
-    doc.setFontSize(12);
-    doc.text("Nombre Producto", 10, yOffset);
-    doc.text("Cantidad", 90, yOffset);
-    doc.text("Precio", 140, yOffset);
-    doc.text("Total", 190, yOffset);
-
-    // Dibujar líneas
-    yOffset += 10;
-    for (let i = 0; i < detalleOrden.productos.length; i++) {
-        const producto = detalleOrden.productos[i];
-        doc.text(producto.nombre_prod, 10, yOffset);
-        doc.text(`${producto.cantidad_productos}`, 90, yOffset);
-        doc.text(`$${producto.precio_prod}`, 140, yOffset);
-        doc.text(`$${producto.total_productos}`, 190, yOffset);
-        yOffset += 10;
-    }
-
-    // Información de pago
-    const total = detalleOrden.productos.reduce((acc, producto) => acc + producto.total_productos, 0) || 0;
-    const impuestos = detalleOrden.productos.reduce((acc, producto) => acc + producto.impuesto, 0) || 0;
-    const envio = detalleOrden.productos[0]?.precio_envio || 0;
-
-    doc.text(`Subtotal: $${total}`, 10, yOffset + 10);
-    doc.text(`Impuestos: $${impuestos}`, 10, yOffset + 15);
-    doc.text(`Envío: $${envio}`, 10, yOffset + 20);
-    doc.text(`Total: $${total + impuestos + envio}`, 10, yOffset + 25);
-
-    // Guardar PDF
-    doc.save("detalle_orden_completa.pdf");
-};
-
-
-
 if (!detalleOrden || !ordenId) {
     return <div>Cargando...</div>;
 }
@@ -260,7 +194,7 @@ if (!detalleOrden || !ordenId) {
                             </option>
                         ))}
                     </select>
-                        <button className="border-splid border-2 py-3 px-10 ml-5 text-xl border-none bg-gray-100 rounded-md" onClick={generatePDF}><IoPrintOutline /></button>
+                        <button className="border-splid border-2 py-3 px-10 ml-5 text-xl border-none bg-gray-100 rounded-md"><IoPrintOutline /></button>
                     </div>
                 </div>
             </header>
