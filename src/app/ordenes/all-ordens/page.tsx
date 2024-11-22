@@ -3,8 +3,6 @@
 import Sidebar from "../../../components/Sidebar";
 import Headerbar from "../../../components/HeaderAdmin";
 import OrdenForm from "../components/posts/OrdenForm";
-import Footer from "../../../components/Footer";
-
 export default function Dash() {
   return (
     <main className="flex h-screen w-full bg-gray-200 overflow-hidden">
@@ -27,10 +25,7 @@ export default function Dash() {
           <OrdenForm />
         </section>
     
-        {/* Footer - ubicado después del contenido */}
-        <footer className="bg-gray-100 h-[10%]">
-          <Footer />
-        </footer>
+        
       </div>
     </main>
   );
