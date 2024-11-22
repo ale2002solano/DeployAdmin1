@@ -21,7 +21,7 @@ const router = useRouter();  // Usamos useRouter para navegar
     };
 
     return(
-        <div className='h-screen w-auto fixed left-0 bg-white p-5 border-gray-300 border-solid border'>
+        <div className='h-screen w-auto fixed top-0 left-0 bg-white p-5 shadow-lg border-solid border'>
             <div className='flex flex-row flex-nowrap justify-start items-center content-around mb-5'>
                 <Image src="/img/logo.svg" alt="Logo" width={60} height={60} />
                 <h1 className='text-gray-950 ml-5 font-koulen'>Dian Crochet</h1>    
@@ -32,7 +32,6 @@ const router = useRouter();  // Usamos useRouter para navegar
                 <button type="button" title='product' className={`text-gray-950 flex flex-row flex-nowrap justify-start items-center content-stretch ${activeButton === 'product' ? 'bg-purple-400 text-white' : ''} rounded-md p-3 w-full text-sm font-medium`} 
                     onClick={() => handleButtonClick('product')}><TiArchive className='mr-2 text-lg' /> TODOS LOS PRODUCTOS</button>
             </div>
-            
         </div>
     );
 }
