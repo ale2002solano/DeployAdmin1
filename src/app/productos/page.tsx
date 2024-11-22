@@ -13,9 +13,7 @@ export default function productos () {
                 <HeaderAdmin/>
             </div>
             
-            <div  className="h-full w-full" >
-                    <SideBar/>
-            </div>
+                <SideBar/>
 
             <div className='flex h-full w-full pt-[5%] pl-[18%]'>
                 <div className="h-full z-2 w-full bg-[#COCOCO]">
