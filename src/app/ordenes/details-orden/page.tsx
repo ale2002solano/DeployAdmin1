@@ -1,6 +1,6 @@
 "use client";
-import Sidebar from "../components/sidebar";
-import Headerbar from "../components/header";
+import Sidebar from "../../../components/sidebar";
+import Headerbar from "../../../components/header";
 import DetailsOrdenForm from "../components/posts/DetailsOrdenForm";
 
 export default function Details() {
