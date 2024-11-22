@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { IoCalendarOutline } from "react-icons/io5";
 import { GrStatusGoodSmall } from "react-icons/gr";
+
+
 // Interfaz para las órdenes
 interface Orden {
     id_factura: number;
@@ -17,6 +19,10 @@ export default function Dashboard() {
    const [fechaInicio, setFechaInicio] = useState<string>("");
    const [fechaFin, setFechaFin] = useState<string>("");
    const [ordenamiento, setOrdenamiento] = useState<"asc" | "desc" | "">(""); 
+   const detailsClick = (id: number) => {
+    localStorage.setItem("ordenSeleccionada", id.toString()); // Guarda el ID de la orden
+    window.location.href = "/ordenes/details-orden"; // Redirige a la vista de detalles
+  };
  
    // Función para obtener las órdenes
   const fetchOrdenes = async () => {
@@ -145,7 +151,11 @@ export default function Dashboard() {
         <tbody className="text-gray-950">
           {ordenes.length > 0 ? (
             ordenes.map((orden) => (
-              <tr key={orden.id_factura} className="border-b">
+              <tr
+                key={orden.id_factura}
+                className="border-b cursor-pointer hover:bg-gray-100"
+                onClick={() => detailsClick(orden.id_factura)}
+              >
                 <td className="p-4">#{orden.codigo_fact}</td>
                 <td className="p-4">{orden.fecha_fact}</td>
                 <td className="p-4">{orden.nombre}</td>
