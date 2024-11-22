@@ -249,29 +249,38 @@ if (!detalleOrden || !ordenId) {
     
     <div className="flex justify-end mt-2">
     <table className="table-auto">
-        <tbody>
-            <tr>
-                <td className="text-gray-700 font-opensans font-semibold w-3/4 text-left">Subtotal:</td>
-                <td className="text-gray-900 font-opensans font-semibold text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.subtotal, 0)}</td>
-            </tr>
-            <tr>
-                <td className="text-gray-700 font-opensans font-semibold text-left">ISV (20%):</td>
-                <td className="text-gray-900 font-opensans font-semibold text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.impuesto, 0)}</td>
-            </tr>
-            <tr>
-                <td className="text-gray-700 font-opensans font-semibold text-left">Descuento:</td>
-                <td className="text-gray-900 font-opensans font-semibold text-right">L.0</td>
-            </tr>
-            <tr>
-                <td className="text-gray-700 font-opensans font-semibold text-left">Envio:</td>
-                <td className="text-gray-900 font-opensans font-semibold text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.precio_envio, 0)}</td>
-            </tr>
-            <tr className="border-t">
-                <td className="text-gray-700 font-semibold text-left text-lg pt-3">Total:</td>
-                <td className="text-gray-900 text-lg font-black pt-3 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.total, 0)}</td>
-            </tr>
-        </tbody>
-    </table>
+    <tbody>
+        <tr>
+            <td className="text-gray-700 font-opensans font-semibold w-3/4 text-left">Subtotal:</td>
+            <td className="text-gray-900 font-opensans font-semibold text-right">
+                L.{(detalleOrden.productos.reduce((acc, producto) => acc + producto.subtotal, 0)).toFixed(2)}
+            </td>
+        </tr>
+        <tr>
+            <td className="text-gray-700 font-opensans font-semibold text-left">ISV (20%):</td>
+            <td className="text-gray-900 font-opensans font-semibold text-right">
+                L.{(detalleOrden.productos.reduce((acc, producto) => acc + producto.impuesto, 0)).toFixed(2)}
+            </td>
+        </tr>
+        <tr>
+            <td className="text-gray-700 font-opensans font-semibold text-left">Descuento:</td>
+            <td className="text-gray-900 font-opensans font-semibold text-right">L.0.00</td>
+        </tr>
+        <tr>
+            <td className="text-gray-700 font-opensans font-semibold text-left">Envio:</td>
+            <td className="text-gray-900 font-opensans font-semibold text-right">
+                L.{(detalleOrden.productos.reduce((acc, producto) => acc + producto.precio_envio, 0)).toFixed(2)}
+            </td>
+        </tr>
+        <tr className="border-t">
+            <td className="text-gray-700 font-semibold text-left text-lg pt-3">Total:</td>
+            <td className="text-gray-900 text-lg font-black pt-3 text-right">
+                L.{(detalleOrden.productos.reduce((acc, producto) => acc + producto.total, 0)).toFixed(2)}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 </div>
 
 
