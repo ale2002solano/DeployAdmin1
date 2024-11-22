@@ -45,7 +45,7 @@ export default function DetailsOrdenForm() {
     const [ordenId, setOrdenId] = useState<string | null>(null);
     const [estados, setEstados] = useState<EstadoFactura[]>([]);
     const [selectedEstado, setSelectedEstado] = useState("");
-    
+
 
     useEffect(() => {
         const idOrden = localStorage.getItem("ordenSeleccionada");
