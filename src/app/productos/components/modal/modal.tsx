@@ -45,6 +45,7 @@
                 const res = await deleteProduct(index, usuarioJ.admin.correo);
                 console.log(res);
                 setShowModal(true);
+                window.location.href = 'http://localhost:3000/productos';
                 if(showModal){
                     setOpen(false);
                 }

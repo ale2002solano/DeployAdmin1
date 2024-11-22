@@ -27,7 +27,6 @@ export default function productos () {
                         <Interactions/></div>
                     </div>
             </div>
-            <Footer/>
         </div>
     )
 }
