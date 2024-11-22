@@ -12,20 +12,36 @@ interface DetalleOrdenCliente {
     ciudad: string | null;
     departamento: string | null;
     direccion_factura: string;
-    id_orden_paypal: string;
-    estado_transaccion: string;
-    fecha_transaccion: string;
+    id_orden_paypal: string | null;
+    estado_transaccion: string | null;
+    fecha_transaccion: string | null;
     color: string;
 }
 
-export default function DetailsOrdenForm() {
-    // Estado para manejar los detalles de la orden
-    const [detalleOrden, setDetalleOrden] = useState<DetalleOrdenCliente | null>(null);
+interface Producto {
+    codigo_fact: string;
+    fecha_fact: string;
+    precio_envio: number;
+    subtotal: number;
+    impuesto: number;
+    total: number;
+    nombre_prod: string;
+    precio_prod: number;
+    cantidad_productos: number;
+    total_productos: number;
+    color: string;
+}
 
-    // Estado para manejar el ID de la orden
+interface DetalleOrden {
+    cliente: DetalleOrdenCliente;
+    productos: Producto[];
+}
+export default function DetailsOrdenForm() {
+    const [detalleOrden, setDetalleOrden] = useState<DetalleOrden | null>(null);
     const [ordenId, setOrdenId] = useState<string | null>(null);
 
-    // Obtener el ID de la orden desde localStorage
+    
+
     useEffect(() => {
         const idOrden = localStorage.getItem("ordenSeleccionada");
         if (idOrden) {
@@ -35,7 +51,6 @@ export default function DetailsOrdenForm() {
         }
     }, []);
 
-    // Función para obtener los detalles de la orden
     const fetchDetalleOrden = useCallback(async () => {
         if (!ordenId) {
             console.error("No se encontró el ID de la orden");
@@ -43,41 +58,40 @@ export default function DetailsOrdenForm() {
         }
 
         try {
-            const response = await fetch(`https://deploybackenddiancrochet.onrender.com/admin/detalle/cliente/orden/${ordenId}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            // Realizar dos solicitudes, una para el cliente y otra para los productos
+            const clienteResponse = await fetch(`https://deploybackenddiancrochet.onrender.com/admin/detalle/cliente/orden/${ordenId}`);
+            const clienteData = await clienteResponse.json();
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            const productosResponse = await fetch(`https://deploybackenddiancrochet.onrender.com/admin/detalle/orden/${ordenId}`);
+            const productosData = await productosResponse.json();
+
+            if (clienteData.DetalleOrdenCliente && clienteData.DetalleOrdenCliente.length > 0) {
+                const cliente = clienteData.DetalleOrdenCliente[0];
+
+                // Combinamos los datos del cliente y los productos
+                const detalleOrdenData: DetalleOrden = {
+                    cliente: cliente,
+                    productos: productosData.DetalleOrden || [],
+                };
+
+                setDetalleOrden(detalleOrdenData);
+            } else {
+                console.error("No se encontró la información del cliente");
             }
-
-            const data = await response.json();
-            // Suponemos que el dato de la orden viene en el campo 'DetalleOrdenCliente'
-            setDetalleOrden(data.DetalleOrdenCliente[0]);  // Toma el primer objeto de la lista
         } catch (error) {
             console.error("Error al obtener los detalles de la orden:", error);
         }
-    }, [ordenId]);  // Añadir ordenId como dependencia
+    }, [ordenId]);
 
-    // Llamar a la función fetchDetalleOrden cuando el componente se monta
     useEffect(() => {
         if (ordenId) {
-            fetchDetalleOrden();
-            const ordenId = localStorage.getItem("ordenSeleccionada");
-console.log("ID de la orden recuperado:", ordenId);
-
+            fetchDetalleOrden();  // Llamamos a la función fetchDetalleOrden
         }
-    }, [ordenId, fetchDetalleOrden]); // Incluir fetchDetalleOrden en las dependencias
+    }, [ordenId, fetchDetalleOrden]);
 
-    // Verificar si se obtuvieron los datos
     if (!detalleOrden || !ordenId) {
         return <div>Cargando...</div>;
     }
-    
-
     return (
         <div id="Primary" className="flex flex-col justify-start items-start w-full h-full overflow-auto p-5">
   {/* Encabezado */}
@@ -92,9 +106,9 @@ console.log("ID de la orden recuperado:", ordenId);
   <div className="w-full bg-white rounded-md p-5 flex flex-col h-auto overflow-auto text-gray-950">
         <div>
             <header>
-                <h1 className="flex items-center font-rubik font-semibold text-xl text-gray-700">Orden ID: #{ordenId} <div className="ml-2 border-solid border-2 p-2 rounded-md font-opensans font-light text-sm" style={{ backgroundColor: detalleOrden.color }}>{detalleOrden.estado_fact}</div></h1>
+                <h1 className="flex items-center font-rubik font-semibold text-xl text-gray-700">Orden ID: #{ordenId} <div className="ml-2 border-solid border-2 p-2 rounded-md font-opensans font-light text-sm" style={{ backgroundColor: detalleOrden.cliente.color }}>{detalleOrden.cliente.estado_fact}</div></h1>
                 <div className="flex flex-row flex-nowrap justify-between items-stretch content-stretch">
-                    <h1 className="flex items-center"><IoCalendarOutline className="mr-2 text-xl" /><div>{detalleOrden.fecha_transaccion}</div></h1>
+                    <h1 className="flex items-center"><IoCalendarOutline className="mr-2 text-xl" /><div>{detalleOrden.cliente.fecha_transaccion}</div></h1>
                     <div className="flex items-center">
                         <select name="status" id="" className="rounded-md border-none bg-gray-100">
                             <option value="">cambiar estado</option>
@@ -110,22 +124,22 @@ console.log("ID de la orden recuperado:", ordenId);
             <div className="flex flex-row flex-nowrap justify-between items-stretch content-stretch mt-3 gap-2">
                 <div className="rounded-md border-solid border-2 p-5 flex-1">
                     <header className="flex justify-center">Cliente</header>
-                    <h2>Nombre: {detalleOrden.nombre}</h2>
-                    <h2>Email: {detalleOrden.correo}</h2>
-                    <h2>Celular: {detalleOrden.telefono}</h2>
+                    <h2>Nombre: {detalleOrden.cliente.nombre}</h2>
+                    <h2>Email: {detalleOrden.cliente.correo}</h2>
+                    <h2>Celular: {detalleOrden.cliente.telefono}</h2>
                 </div>
                 <div className="rounded-md border-solid border-2 p-5 flex-1">
                     <header className="flex justify-center">Info de pago</header>
                     <h2 className="flex items-center">Forma de pago: <FaCcPaypal className="text-4xl ml-2 text-blue-600" /></h2>
-                    <h2>ID orden PayPal: {detalleOrden.id_orden_paypal}</h2>
-                    <h2>Estado transacción: {detalleOrden.estado_transaccion}</h2>
-                    <h2>Fecha transacción: {detalleOrden.fecha_transaccion}</h2>
+                    <h2>ID orden PayPal: {detalleOrden.cliente.id_orden_paypal}</h2>
+                    <h2>Estado transacción: {detalleOrden.cliente.estado_transaccion}</h2>
+                    <h2>Fecha transacción: {detalleOrden.cliente.fecha_transaccion}</h2>
                 </div>
                 <div className="rounded-md border-solid border-2 p-5 flex-1">
                     <header className="flex justify-center">Entrega en</header>
-                    <h2>Departamento: {detalleOrden.departamento || ""}</h2>
-                    <h2>Ciudad: {detalleOrden.ciudad || ""}</h2>
-                    <h2>Dirección: {detalleOrden.direccion_factura}</h2>
+                    <h2>Departamento: {detalleOrden.cliente.departamento || ""}</h2>
+                    <h2>Ciudad: {detalleOrden.cliente.ciudad || ""}</h2>
+                    <h2>Dirección: {detalleOrden.cliente.direccion_factura}</h2>
                 </div>
             </div>
 
@@ -135,7 +149,7 @@ console.log("ID de la orden recuperado:", ordenId);
   <div className="w-full bg-white rounded-md p-5 flex flex-col h-auto overflow-auto text-gray-950 mt-3">
     <header className="flex justify-center border-b">Productos</header>
     <table>
-        <thead>
+        <thead className="text-left">
             <tr>
                 <th className="border-b p-3">Nombre producto</th>
                 <th className="border-b p-3">Orden ID</th>
@@ -144,7 +158,16 @@ console.log("ID de la orden recuperado:", ordenId);
             </tr>
         </thead>
         <tbody>
-        </tbody>
+             {detalleOrden.productos.map((producto, index) => (
+                 <tr key={index}>
+                     <td className="border-b p-3">{producto.nombre_prod}</td>
+                     <td className="border-b p-3">{ordenId}</td>
+                     <td className="border-b p-3">{producto.cantidad_productos}</td>
+                     <td className="border-b p-3">L.{producto.total_productos}</td>
+                 </tr>
+             ))}
+         </tbody>
+
     </table>
   </div>
 </div>
