@@ -15,7 +15,7 @@ export default function productos () {
                 <HeaderAdmin/>
             </div>
             
-            <div  className="h-full" >
+            <div  className="h-full w-full" >
                     <SideBar/>
             </div>
 
