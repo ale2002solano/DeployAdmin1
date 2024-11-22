@@ -3,24 +3,35 @@
 import Sidebar from "../../../components/Sidebar";
 import Headerbar from "../../../components/HeaderAdmin";
 import OrdenForm from "../components/posts/OrdenForm";
+import Footer from "../../../components/Footer";
+
 export default function Dash() {
   return (
     <main className="flex h-screen w-full bg-gray-200 overflow-hidden">
-          
-          <aside className="w-[250px] md:w-[300px] h-full fixed top-0 left-0 z-20">
-            <Sidebar />
-          </aside>
+      
+      {/* Sidebar con un ancho fijo */}
+      <aside className="w-[250px] md:w-[300px] h-full fixed top-0 left-0 z-20">
+        <Sidebar />
+      </aside>
     
-          <div className="flex flex-col flex-1 h-full relative">
+      {/* Contenido principal */}
+      <div className="flex flex-col flex-1 h-full pl-[250px] md:pl-[300px]">
     
-            <header className="h-[10%] bg-gray-100 relative z-0">
-              <Headerbar />
-            </header>
+        {/* Header */}
+        <header className="h-[10%] bg-gray-100 relative z-0">
+          <Headerbar />
+        </header>
     
-            <section className="flex-1 overflow-y-auto mt-[0%] ml-[16.4%]">
-              <OrdenForm />
-            </section>
-          </div>
-        </main>
+        {/* Sección de contenido */}
+        <section className="flex-1 overflow-y-auto">
+          <OrdenForm />
+        </section>
+    
+        {/* Footer - ubicado después del contenido */}
+        <footer className="bg-gray-100 h-[10%]">
+          <Footer />
+        </footer>
+      </div>
+    </main>
   );
 }
