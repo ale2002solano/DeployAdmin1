@@ -98,9 +98,6 @@ export default function Dashboard() {
    // Obtener órdenes al cargar el componente
    useEffect(() => {
     fetchOrdenes();
-
-    console.log("Órdenes obtenidas:", ordenes);
-
   }, []);
     return(
         <>
@@ -125,14 +122,15 @@ export default function Dashboard() {
       <div className="font-rubik ">
         Ordenar por fecha:
         <select
-              className="border-none text-sm w-auto rounded-md"
-              value={ordenamiento}
-              onChange={manejarOrdenamiento}
-            >
-          <option value="" disabled className="text-gray-600">seleccionar</option>
-          <option value="fecha">Ascendente</option>
-          <option value="cliente">Descendente</option>
+          className="border-none text-sm w-auto rounded-md"
+          value={ordenamiento}
+          onChange={manejarOrdenamiento}
+        >
+          <option value="" disabled className="text-gray-600">Seleccionar</option>
+          <option value="asc">Ascendente</option>
+          <option value="desc">Descendente</option>
         </select>
+
       </div>
     </div>
 
