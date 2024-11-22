@@ -1,6 +1,6 @@
 "use client";
-import Sidebar from "../ordenes/components/sidebar";
-import Headerbar from "../ordenes/components/header";
+import Sidebar from "../../components/sidebar";
+import Headerbar from "../../components/HeaderAdmin";
 
 export default function ShopCart() {
     return (
