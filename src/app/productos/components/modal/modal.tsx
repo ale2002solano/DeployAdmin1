@@ -2,6 +2,8 @@
     import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
     import { ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
     import { deleteProduct } from '@services/product';
+    import ModalSinBotones from '../modal/modalSinBotones'
+    import { useState } from 'react';
 
     interface ModalProps {
     title: string;
@@ -34,6 +36,7 @@
     ? 'bg-red-100'
     : 'bg-gray-50';
     const usuario = localStorage.getItem("usuario");
+    const [showModal, setShowModal] = useState(false);
 
     const handleDelete = async () => {
         try {
@@ -41,6 +44,8 @@
                 const usuarioJ = JSON.parse(usuario);
                 const res = await deleteProduct(index, usuarioJ.admin.correo);
                 console.log(res);
+                setShowModal(true);
+                setOpen(false);
             } else {
                 console.log("No hay datos en localStorage.");
             }
@@ -91,7 +96,7 @@
 
                 <button
                     type="button"
-                    onClick={() => {handleDelete(); setOpen(false);}}
+                    onClick={() => {handleDelete();}}
                     className="inline-flex w-full hover:bg-red-500 hover:text-white justify-center rounded-md bg-white px-3 font-lekton py-2 text-sm font-semibold text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
                 >
                     Aceptar
@@ -100,6 +105,19 @@
                 </div>
             </DialogPanel>
             </div>
+
+            {showModal ? (
+            <ModalSinBotones
+            title={'Producto eliminado'}
+            message={'Producto eliminado con éxito'}
+            type={1}
+            open={showModal}
+            setOpen={setShowModal}
+            />
+        ) : (
+            ""
+        )}
+
         </div>
         </Dialog>
     )

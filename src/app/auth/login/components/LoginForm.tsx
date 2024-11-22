@@ -47,7 +47,7 @@ export default function LoginForm () {
             // Guarda el objeto 'response' en el localStorage
             localStorage.setItem('usuario', JSON.stringify(response));
             setCodigo(1);
-            router.push("http://localhost:3000/");
+            router.push("http://localhost:3000/ordenes/all-ordens");
         } else if (response.admin.codigo == 2) {
             setCodigo(2);
             setCorreoError("Usuario no administrativo");

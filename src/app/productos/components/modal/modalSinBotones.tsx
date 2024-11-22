@@ -10,7 +10,7 @@ open: boolean; // Añadir `open` como prop
 setOpen: (value: boolean) => void; // Añadir `setOpen` como prop
 }
 
-export default function Modal({ title, type, message, open, setOpen }: ModalProps) {
+export default function ModalSinBotones({ title, type, message, open, setOpen }: ModalProps) {
 const getIcon = (type: number) => {
     switch (type) {
     case 1: // Éxito
