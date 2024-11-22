@@ -3,6 +3,7 @@
 
 import HeaderAdmin from 'components/HeaderAdmin'
 import SideBar from "components/sidebar";
+import SideBar from 'components/sidebar'
 import Titulo from './components/Titulo'
 import Interactions from './components/Interactions'
 
