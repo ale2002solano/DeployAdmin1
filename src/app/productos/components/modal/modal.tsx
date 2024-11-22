@@ -36,7 +36,6 @@
             if (usuario) {
                 const usuarioJ = JSON.parse(usuario);
                 const res = await deleteProduct(index, usuarioJ.admin.correo);
-                console.log(res);
                 window.location.href = 'http://localhost:3000/productos';
                 setShowModal(true);
                 if(showModal){
