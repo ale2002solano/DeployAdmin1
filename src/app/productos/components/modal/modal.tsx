@@ -14,7 +14,7 @@
     index: number;
     }
 
-    export default function Modal({ title, type, message, open, setOpen, index }: ModalProps) {
+    export default function Modal({ title, type, message, open, setOpen, index }: Readonly<ModalProps>) {
     const getIcon = (type: number) => {
         switch (type) {
         case 1: // Éxito
@@ -28,13 +28,6 @@
         }
     };
 
-    const backgroundColorClass = type === 1
-    ? 'bg-green-50'
-    : type === 2
-    ? 'bg-yellow-50'
-    : type === 3
-    ? 'bg-red-100'
-    : 'bg-gray-50';
     const usuario = localStorage.getItem("usuario");
     const [showModal, setShowModal] = useState(false);
 
@@ -45,6 +38,7 @@
                 const res = await deleteProduct(index, usuarioJ.admin.correo);
                 console.log(res);
                 setShowModal(true);
+                window.location.href = 'http://localhost:3000/productos';
                 if(showModal){
                     setOpen(false);
                 }
@@ -72,7 +66,7 @@
             >
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
-                    <div className={`mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10 ${backgroundColorClass}`}>
+                    <div className={`mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10 bg-yellow-50`}>
                     {getIcon(type)}
                     </div>
                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">

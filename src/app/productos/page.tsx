@@ -4,7 +4,6 @@
 import HeaderAdmin from 'components/HeaderAdmin'
 import SideBar from 'components/Sidebar'
 import Titulo from './components/Titulo'
-import Footer from 'components/Footer'
 import Interactions from './components/Interactions'
 
 export default function productos () {
@@ -14,7 +13,7 @@ export default function productos () {
                 <HeaderAdmin/>
             </div>
             
-            <div  className="h-full" >
+            <div  className="h-full w-full" >
                     <SideBar/>
             </div>
 
@@ -22,11 +21,10 @@ export default function productos () {
                 <div className="h-full z-2 w-full bg-[#COCOCO]">
                     <div className="h-[8%] w-full">
                         <Titulo/></div>
-                    <div className="h-[85%] w-full">
+                    <div className="h-full w-full">
                         <Interactions/></div>
                     </div>
             </div>
-            <Footer/>
         </div>
     )
 }
