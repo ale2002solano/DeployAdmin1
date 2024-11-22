@@ -3,8 +3,6 @@
 import Sidebar from "../../../components/Sidebar";
 import Headerbar from "../../../components/HeaderAdmin";
 import OrdenForm from "../components/posts/OrdenForm";
-import Footer from "../../../components/Footer";
-
 export default function Dash() {
   return (
     <main className="flex h-screen w-full bg-gray-200 overflow-hidden">
