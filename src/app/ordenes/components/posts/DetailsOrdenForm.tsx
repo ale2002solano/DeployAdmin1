@@ -182,11 +182,11 @@ if (!detalleOrden || !ordenId) {
   <div className="w-full bg-white rounded-md p-5 flex flex-col h-full text-gray-950">
         <div>
             <header>
-                <h1 className="flex items-center font-rubik font-semibold text-xl text-gray-700">Orden ID: #{ordenId} <div className="ml-2 border-solid border-2 p-2 rounded-md font-opensans font-light text-sm" style={{ backgroundColor: detalleOrden.cliente.color }}>{detalleOrden.cliente.estado_fact}</div></h1>
+                <h1 className="flex items-center font-rubik font-semibold text-2xl text-gray-800">Orden ID: #{ordenId} <div className="ml-2 border-solid border-2 p-2 rounded-md font-opensans font-semibold text-white text-sm" style={{ backgroundColor: detalleOrden.cliente.color }}>{detalleOrden.cliente.estado_fact}</div></h1>
                 <div className="flex flex-row flex-nowrap justify-between items-stretch content-stretch">
-                    <h1 className="flex items-center"><IoCalendarOutline className="mr-2 text-xl" /><div>{detalleOrden.cliente.fecha_transaccion}</div></h1>
+                    <h1 className="flex items-center font-opensansm font-semibold text-xl"><IoCalendarOutline className="mr-2 text-xl" /><div>{detalleOrden.cliente.fecha_transaccion}</div></h1>
                     <div className="flex items-center">
-                    <select name="status" id="status" className="rounded-md border-none bg-gray-100" value={selectedEstado} onChange={statusChange}>
+                    <select name="status" id="status" className="rounded-md border-none bg-gray-100 font-opensans" value={selectedEstado} onChange={statusChange}>
                         <option value="">Cambiar estado</option>
                         {estados.map((estado) => (
                             <option key={estado.ID_ESTADO_FACT} value={estado.ESTADO_FACT}>
@@ -199,21 +199,21 @@ if (!detalleOrden || !ordenId) {
                 </div>
             </header>
             <div className="flex flex-row flex-nowrap justify-between items-stretch content-stretch mt-3 gap-2">
-                <div className="rounded-md border-solid border-2 p-5 flex-1">
-                    <header className="flex justify-center">Cliente</header>
+                <div className="rounded-md border-solid border-2 p-5 flex-1 font-opensansm text-gray-700 text-lg">
+                    <header className="flex justify-center font-rubik font-semibold text-xl text-gray-900">Cliente</header>
                     <h2>Nombre: {detalleOrden.cliente.nombre}</h2>
                     <h2>Email: {detalleOrden.cliente.correo}</h2>
                     <h2>Celular: {detalleOrden.cliente.telefono}</h2>
                 </div>
-                <div className="rounded-md border-solid border-2 p-5 flex-1">
-                    <header className="flex justify-center">Info de pago</header>
+                <div className="rounded-md border-solid border-2 p-5 flex-1 font-opensansm text-gray-700 text-lg">
+                    <header className="flex justify-center font-rubik font-semibold text-xl text-gray-900">Info de pago</header>
                     <h2 className="flex items-center">Forma de pago: <FaCcPaypal className="text-4xl ml-2 text-blue-600" /></h2>
                     <h2>ID orden PayPal: {detalleOrden.cliente.id_orden_paypal}</h2>
                     <h2>Estado transacción: {detalleOrden.cliente.estado_transaccion}</h2>
                     <h2>Fecha transacción: {detalleOrden.cliente.fecha_transaccion}</h2>
                 </div>
-                <div className="rounded-md border-solid border-2 p-5 flex-1">
-                    <header className="flex justify-center">Entrega en</header>
+                <div className="rounded-md border-solid border-2 p-5 flex-1 font-opensansm text-gray-700 text-lg">
+                    <header className="flex justify-center font-rubik font-semibold text-xl text-gray-900">Entrega en</header>
                     <h2>Departamento: {detalleOrden.cliente.departamento || ""}</h2>
                     <h2>Ciudad: {detalleOrden.cliente.ciudad || ""}</h2>
                     <h2>Dirección: {detalleOrden.cliente.direccion_factura}</h2>
@@ -224,9 +224,9 @@ if (!detalleOrden || !ordenId) {
   </div>
 
   <div className="w-full bg-white rounded-md p-5 flex flex-col h-full text-gray-950 mt-3">
-    <header className="flex justify-center border-b">Productos</header>
+    <header className="flex justify-center border-b font-rubik font-semibold text-xl text-gray-900">Productos</header>
     <table>
-        <thead className="text-left">
+        <thead className="text-left font-rubik text-lg text-gray-500">
             <tr>
                 <th className="border-b p-3">Nombre producto</th>
                 <th className="border-b p-3">Orden ID</th>
@@ -234,7 +234,7 @@ if (!detalleOrden || !ordenId) {
                 <th className="border-b p-3">Total</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody className="font-opensansm text-lg">
              {detalleOrden.productos.map((producto, index) => (
                  <tr key={index}>
                      <td className="border-b p-3">{producto.nombre_prod}</td>
@@ -247,28 +247,28 @@ if (!detalleOrden || !ordenId) {
 
     </table>
     
-    <div className="flex justify-end">
+    <div className="flex justify-end mt-2">
     <table className="table-auto">
         <tbody>
             <tr>
-                <td className="text-gray-700 font-semibold w-3/4 text-left">Subtotal:</td>
-                <td className="text-gray-900 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.subtotal, 0)}</td>
+                <td className="text-gray-700 font-opensans font-semibold w-3/4 text-left">Subtotal:</td>
+                <td className="text-gray-900 font-opensans font-semibold text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.subtotal, 0)}</td>
             </tr>
             <tr>
-                <td className="text-gray-700 font-semibold text-left">ISV (20%):</td>
-                <td className="text-gray-900 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.impuesto, 0)}</td>
+                <td className="text-gray-700 font-opensans font-semibold text-left">ISV (20%):</td>
+                <td className="text-gray-900 font-opensans font-semibold text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.impuesto, 0)}</td>
             </tr>
             <tr>
-                <td className="text-gray-700 font-semibold text-left">Descuento:</td>
-                <td className="text-gray-900 text-right">L.0</td>
+                <td className="text-gray-700 font-opensans font-semibold text-left">Descuento:</td>
+                <td className="text-gray-900 font-opensans font-semibold text-right">L.0</td>
             </tr>
             <tr>
-                <td className="text-gray-700 font-semibold text-left">Envio:</td>
-                <td className="text-gray-900 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.precio_envio, 0)}</td>
+                <td className="text-gray-700 font-opensans font-semibold text-left">Envio:</td>
+                <td className="text-gray-900 font-opensans font-semibold text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.precio_envio, 0)}</td>
             </tr>
             <tr className="border-t">
                 <td className="text-gray-700 font-semibold text-left text-lg pt-3">Total:</td>
-                <td className="text-gray-900 text-lg font-bold pt-3 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.total, 0)}</td>
+                <td className="text-gray-900 text-lg font-black pt-3 text-right">L.{detalleOrden.productos.reduce((acc, producto) => acc + producto.total, 0)}</td>
             </tr>
         </tbody>
     </table>
