@@ -37,7 +37,7 @@
                 const usuarioJ = JSON.parse(usuario);
                 const res = await deleteProduct(index, usuarioJ.admin.correo);
                 console.log(res);
-                window.location.href = 'http://localhost:3000/productos';
+                window.location.href = 'https://dian-crochet-admin-five.vercel.app/productos';
                 setShowModal(true);
                 if(showModal){
                     setOpen(false);
