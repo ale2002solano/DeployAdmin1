@@ -15,14 +15,30 @@ export default function BotonDespl ({indexProduct} : {indexProduct : number}) {
     const router = useRouter();
 
     const handleDeleteProduct = (index: number) => {
-        setDeleteProduct(index);
-        setShowModal(true);
+        const usuario = localStorage.getItem("usuario");
+    
+        if (usuario) {
+            setDeleteProduct(index);
+            setShowModal(true);
+        } else {
+            console.log("No hay datos en localStorage. Acción bloqueada.");
+            alert("Debes iniciar sesión para eliminar un producto.");
+        }
     };
+    
 
     const handleEditProduct = (index: number) => {
-        setEdit(index);
-        router.push(`http://localhost:3000/update/${index}`);
+        const usuario = localStorage.getItem("usuario");
+    
+        if (usuario) {
+            setEdit(index);
+            router.push(`http://localhost:3000/update/${index}`);
+        } else {
+            console.log("No hay datos en localStorage. Navegación bloqueada.");
+            alert("Debes iniciar sesión para editar un producto.");
+        }
     };
+    
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
