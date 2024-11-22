@@ -45,11 +45,13 @@
                 const res = await deleteProduct(index, usuarioJ.admin.correo);
                 console.log(res);
                 setShowModal(true);
-                setOpen(false);
+                if(showModal){
+                    setOpen(false);
+                }
             } else {
                 console.log("No hay datos en localStorage.");
+                setOpen(false);
             }
-            console.log('entra');
         } catch (error) {
             console.error('Error al eliminar el producto:', error);
         }
@@ -102,22 +104,20 @@
                     Aceptar
                 </button>
 
+                {showModal ? (
+                    <ModalSinBotones
+                    title={'Producto eliminado'}
+                    message={'Producto eliminado con éxito'}
+                    type={1}
+                    open={showModal}
+                    setOpen={setShowModal}
+                    />
+                ) : (
+                    ""
+                )}
                 </div>
             </DialogPanel>
             </div>
-
-            {showModal ? (
-            <ModalSinBotones
-            title={'Producto eliminado'}
-            message={'Producto eliminado con éxito'}
-            type={1}
-            open={showModal}
-            setOpen={setShowModal}
-            />
-        ) : (
-            ""
-        )}
-
         </div>
         </Dialog>
     )
