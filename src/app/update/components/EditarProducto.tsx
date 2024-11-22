@@ -513,10 +513,15 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
             {/* Keywoard Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700">Keyword</label>
-              <input
+              <label className="block text-sm font-medium text-gray-700">Keyword</label>
+                <input
                   type="text"
+                  name="keywordInput"
                   value={keywordInput}
-                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onChange={(e) => {
+                    setKeywordInput(e.target.value);
+                    handleInputChange(e); // Lógica para actualizar `editableProduct`
+                  }}
                   onKeyDown={handleKeywordAdd}
                   disabled={isDisabled}
                   className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
@@ -531,9 +536,15 @@ export default function EditarProducto ({ id }: EditarMaterialProps) {
                       {keyword}
                       <button
                         type="button"
-                        onClick={() => handleKeywordRemove(keyword)}
-                        className="ml-2 text-red-500 hover:text-red-700"
-                        
+                        onClick={() => {
+                          if (!isDisabled) handleKeywordRemove(keyword);
+                        }}
+                        disabled={isDisabled}
+                        className={`ml-2 ${
+                          isDisabled
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-red-500 hover:text-red-700"
+                        }`}
                       >
                         &times;
                       </button>

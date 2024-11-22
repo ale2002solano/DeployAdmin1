@@ -23,7 +23,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
     const [isGallery, setIsGallery] = useState(false);
     const [mainImage, setMainImage] = useState<string | null>(productoInfo?.imagen_principal || null);
     // Inicializar el estado de los grosores con la data de productoInfo.grosores
-    const [, setSizes] = useState<Record<string, { cantidad: number, precio: number }>>({});
+    const [sizes, setSizes] = useState<Record<string, { cantidad: number, precio: number }>>({});
     //const [editing, setEditing] = useState(true);
     // Mapeo entre los nombres que vienen del backend y los que queremos mostrar
     const sizeMap: Record<string, string> = {
@@ -137,15 +137,6 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
       const handleKeywordRemove = (keyword: string) => {
         setKeywords((prevKeywords) => {
           const updatedKeywords = prevKeywords?.filter((k) => k !== keyword) || null;
-          setEditableProduct((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  keywords: updatedKeywords,
-                }
-              : null
-          );
-      
           return updatedKeywords && updatedKeywords.length > 0 ? updatedKeywords : null;
         });
       };
@@ -161,9 +152,20 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
             const getCategories = async () => {
                 const fetchedCategories = await fetchCategoriesMaterials();
                 setCategories(fetchedCategories);
+        
+                // Si hay información del producto, encuentra el ID correspondiente.
+                if (productoInfo?.categorias && productoInfo.categorias.length > 0) {
+                    const matchingCategory = fetchedCategories.find(
+                        (category) => category.CATEGORIA === productoInfo.categorias[0]
+                    );
+                    if (matchingCategory) {
+                        setSelectedCategoryId(matchingCategory.ID_CATEGORIA);
+                    }
+                }
             };
+        
             getCategories();
-        }, []);
+        }, [productoInfo]);
         
         const handleCategorySelect = (id: number) => {
           setSelectedCategoryId(id);
@@ -341,19 +343,21 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                           </label>
                           <select
                               id="category"
-                              defaultValue={selectedCategoryId ||""}
+                              value={selectedCategoryId || ""}
                               disabled={isDisabled}
                               onChange={(e) => handleCategorySelect(Number(e.target.value))}
-                              className="p-2 border w text-black rounded-lg w-full"
+                              className="p-2 border text-black rounded-lg w-full"
                           >
-                              <option value={productoInfo?.categorias} >
-                                  {productoInfo?.categorias}
+                              <option value="" disabled>
+                                  Selecciona una categoría
                               </option>
-                              {categories.map((category) => (
-                                  <option key={category.ID_CATEGORIA} value={category.ID_CATEGORIA}>
-                                      {category.CATEGORIA}
-                                  </option>
-                              ))}
+                              {categories
+                                  .filter((category) => category.CATEGORIA !== "Lanas") // Excluir "Lanas"
+                                  .map((category) => (
+                                      <option key={category.ID_CATEGORIA} value={category.ID_CATEGORIA}>
+                                          {category.CATEGORIA}
+                                      </option>
+                                  ))}
                           </select>
                         </div> 
                 </div>
@@ -361,7 +365,7 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                   <div className="mt-4 space-y-4">
                         {allSizes.map((size) => {
                           // Comprobamos si el nombre del tamaño existe en los grosores del backend
-                          const backendSize = Object.keys(sizeMap).find(key => sizeMap[key] === size);
+                          const backendSize = Object.keys(sizes).find(key => sizeMap[key] === size);
 
                           return (
                             <div key={size} className="grid grid-cols-2 gap-4">
@@ -469,11 +473,15 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
             
             {/* Keywoard Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">Keyword</label>
-              <input
+            <label className="block text-sm font-medium text-gray-700">Keyword</label>
+                <input
                   type="text"
+                  name="keywordInput"
                   value={keywordInput}
-                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onChange={(e) => {
+                    setKeywordInput(e.target.value);
+                    handleInputChange(e); // Lógica para actualizar `editableProduct`
+                  }}
                   onKeyDown={handleKeywordAdd}
                   disabled={isDisabled}
                   className="mt-2 p-2 border text-black border-gray-300 rounded-lg w-full"
@@ -488,9 +496,15 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                       {keyword}
                       <button
                         type="button"
-                        onClick={() => handleKeywordRemove(keyword)}
-                        className="ml-2 text-red-500 hover:text-red-700"
-                        
+                        onClick={() => {
+                          if (!isDisabled) handleKeywordRemove(keyword);
+                        }}
+                        disabled={isDisabled}
+                        className={`ml-2 ${
+                          isDisabled
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-red-500 hover:text-red-700"
+                        }`}
                       >
                         &times;
                       </button>
