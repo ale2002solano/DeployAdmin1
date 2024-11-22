@@ -4,7 +4,6 @@
 import HeaderAdmin from 'components/HeaderAdmin'
 import SideBar from 'components/Sidebar'
 import Titulo from './components/Titulo'
-import Footer from 'components/Footer'
 import Interactions from './components/Interactions'
 
 
