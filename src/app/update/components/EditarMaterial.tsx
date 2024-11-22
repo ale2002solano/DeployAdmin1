@@ -164,30 +164,11 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
             };
             getCategories();
         }, []);
-
+        
         const handleCategorySelect = (id: number) => {
           setSelectedCategoryId(id);
           console.log("Selected category ID:", id);
       };
-        
-        useEffect(() => {
-          const getCategories = async () => {
-              const fetchedCategories = await fetchCategoriesMaterials();
-              setCategories(fetchedCategories);
-      
-              // Si hay información del producto, encuentra el ID correspondiente.
-              if (productoInfo?.categorias && productoInfo.categorias.length > 0) {
-                  const matchingCategory = fetchedCategories.find(
-                      (category) => category.CATEGORIA === productoInfo.categorias[0]
-                  );
-                  if (matchingCategory) {
-                      setSelectedCategoryId(matchingCategory.ID_CATEGORIA);
-                  }
-              }
-          };
-      
-          getCategories();
-      }, [productoInfo]);
 
       const handleEdit = () => {
         setIsEditing(!isEditing); 
@@ -355,31 +336,26 @@ export default function EditarMaterial ({ id }: EditarMaterialProps) {
                 </div>
                 {/* Categorías (Carrusel) */}
                 <div>
-        <label
-            htmlFor="category"
-            className="block text-sm font-medium mt-[24px] text-gray-700"
-        >
-            Categorías
-        </label>
-       <select
-            id="category"
-            value={selectedCategoryId || ""}
-            disabled={isDisabled}
-            onChange={(e) => handleCategorySelect(Number(e.target.value))}
-            className="p-2 border text-black rounded-lg w-full"
-        >
-            <option value="" disabled>
-                Selecciona una categoría
-            </option>
-            {categories
-                .filter((category) => category.CATEGORIA !== "Lanas") // Excluir "Lanas"
-                .map((category) => (
-                    <option key={category.ID_CATEGORIA} value={category.ID_CATEGORIA}>
-                        {category.CATEGORIA}
-                    </option>
-                ))}
-        </select>
-        </div> 
+                          <label htmlFor="category" className="block text-sm font-medium mt-[24px] text-gray-700">
+                              Categorías
+                          </label>
+                          <select
+                              id="category"
+                              defaultValue={selectedCategoryId ||""}
+                              disabled={isDisabled}
+                              onChange={(e) => handleCategorySelect(Number(e.target.value))}
+                              className="p-2 border w text-black rounded-lg w-full"
+                          >
+                              <option value={productoInfo?.categorias} >
+                                  {productoInfo?.categorias}
+                              </option>
+                              {categories.map((category) => (
+                                  <option key={category.ID_CATEGORIA} value={category.ID_CATEGORIA}>
+                                      {category.CATEGORIA}
+                                  </option>
+                              ))}
+                          </select>
+                        </div> 
                 </div>
                 ) : (
                   <div className="mt-4 space-y-4">
